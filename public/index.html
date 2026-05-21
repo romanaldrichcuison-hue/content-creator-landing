@@ -72,3 +72,311 @@
         .btn {
             padding: 0.75rem 2rem;
             border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .how-it-works {
+            padding: 4rem 2rem;
+            background: #f9f9f9;
+            text-align: center;
+        }
+
+        .how-it-works h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .pricing {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .pricing-card.popular {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.popular::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .pricing-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features li {
+            padding: 0.75rem 0;
+            color: #555;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">🚀 AI Content Creator</div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#cta">Get Started</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>AI-Powered Content for Every Platform</h1>
+        <p>One topic. Infinite platforms. Let Claude write platform-specific content. Auto-post to Twitter, Instagram, Facebook, and LinkedIn daily.</p>
+        <div class="hero-buttons">
+            <a href="#pricing" class="btn btn-primary">Get Started</a>
+            <a href="#features" class="btn btn-secondary">Learn More</a>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="features">
+        <h2>How it works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">📝</div>
+                <h3>Submit a topic</h3>
+                <p>Choose your frequency and what you want created</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">✨</div>
+                <h3>Claude generates</h3>
+                <p>Platform-optimized versions for each social channel</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">🚀</div>
+                <h3>Auto-posts</h3>
+                <p>Content goes live to all platforms simultaneously</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <h2>Simple, transparent pricing</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 3rem;">Choose the plan that fits your needs</p>
+        
+        <div class="pricing-cards">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <p>Perfect for solopreneurs</p>
+                <div class="price">$29<span>/month</span></div>
+                <ul class="features">
+                    <li>10 posts/month</li>
+                    <li>Twitter, Instagram, Facebook</li>
+                    <li>Platform-optimized</li>
+                    <li>Email confirmation</li>
+                </ul>
+                <a href="https://buy.stripe.com/cNicN69Eo8GkgzMaw2ejK02" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+
+            <!-- Creator Plan (Most Popular) -->
+            <div class="pricing-card popular">
+                <h3>Creator</h3>
+                <p>For content creators</p>
+                <div class="price">$79<span>/month</span></div>
+                <ul class="features">
+                    <li>30 posts/month</li>
+                    <li>All platforms + LinkedIn</li>
+                    <li>Custom hashtag strategy</li>
+                    <li>Weekly performance reports</li>
+                </ul>
+                <a href="https://buy.stripe.com/bJe9AU7wgcWA1EScEaejK01" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+
+            <!-- Agency Plan -->
+            <div class="pricing-card">
+                <h3>Agency</h3>
+                <p>For agencies & teams</p>
+                <div class="price">$199<span>/month</span></div>
+                <ul class="features">
+                    <li>Unlimited posts</li>
+                    <li>All platforms + TikTok</li>
+                    <li>Custom brand voice</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="https://buy.stripe.com/7sYbJ2dUE7CgfvIeMiejK00" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="cta">
+        <h2>Ready to scale your content?</h2>
+        <a href="#pricing" class="btn btn-secondary">Choose Your Plan</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 AI Content Creator. All rights reserved.</p>
+    </footer>
+</body>
+</html>
