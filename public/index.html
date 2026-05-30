@@ -1,382 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Content Creator - Auto-Post to All Platforms</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movementum AI — Social Media on Autopilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #06070F;
+    --bg-2:     #0C0E1C;
+    --bg-card:  #0E1124;
+    --ink:      #E4EDFF;
+    --ink-soft: #7A8EAE;
+    --neon:     #00F0FF;
+    --neon-glow:rgba(0,240,255,0.45);
+    --neon-dim: rgba(0,240,255,0.07);
+    --hot:      #FF2E63;
+    --hot-glow: rgba(255,46,99,0.45);
+    --line:     rgba(0,240,255,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Rajdhani',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    font-size:17px;
+  }
+  /* grid bg */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.028) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,240,255,0.028) 1px,transparent 1px);
+    background-size:48px 48px;
+  }
+  /* scanlines */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:repeating-linear-gradient(
+      0deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,
+      transparent 1px,transparent 3px);
+  }
+  h1,h2,h3{font-family:'Orbitron',sans-serif;font-weight:700;line-height:1.1;letter-spacing:0.01em;}
+  a{text-decoration:none;color:inherit;}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1;}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
+  /* ── NAV ── */
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(18px);
+    background:rgba(6,7,15,0.88);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;}
+  .brand{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;}
+  .brand-ai{color:var(--neon);text-shadow:0 0 14px var(--neon-glow);}
+  .nav-links{display:flex;align-items:center;gap:2rem;}
+  .nav-links a{font-weight:600;font-size:0.82rem;color:var(--ink-soft);letter-spacing:0.07em;text-transform:uppercase;transition:color .2s;}
+  .nav-links a:hover{color:var(--neon);}
+  .btn{
+    display:inline-block;font-family:'Orbitron',sans-serif;font-weight:600;
+    font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;
+    padding:0.75rem 1.5rem;border-radius:3px;transition:all .2s;
+    cursor:pointer;border:none;white-space:nowrap;
+  }
+  .btn-neon{
+    background:transparent;color:var(--neon);border:1.5px solid var(--neon);
+    box-shadow:0 0 14px rgba(0,240,255,0.25),inset 0 0 14px rgba(0,240,255,0.04);
+  }
+  .btn-neon:hover{
+    background:var(--neon);color:var(--bg);
+    box-shadow:0 0 28px var(--neon-glow),0 0 56px rgba(0,240,255,0.25);
+    transform:translateY(-2px);
+  }
+  .btn-hot{
+    background:transparent;color:var(--hot);border:1.5px solid var(--hot);
+    box-shadow:0 0 14px rgba(255,46,99,0.25),inset 0 0 14px rgba(255,46,99,0.04);
+  }
+  .btn-hot:hover{
+    background:var(--hot);color:#fff;
+    box-shadow:0 0 28px var(--hot-glow),0 0 56px rgba(255,46,99,0.25);
+    transform:translateY(-2px);
+  }
+  .btn-outline{
+    background:transparent;color:var(--ink);
+    border:1.5px solid rgba(255,255,255,0.18);
+  }
+  .btn-outline:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-2px);}
 
-        header {
-            background: white;
-            border-bottom: 1px solid #eee;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  /* ── HERO ── */
+  .hero{padding:6rem 0 5rem;position:relative;z-index:1;}
+  .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:3.5rem;align-items:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.14em;color:var(--neon);
+    background:var(--neon-dim);border:1px solid var(--line);
+    padding:0.45rem 1rem;border-radius:3px;margin-bottom:1.5rem;
+    box-shadow:0 0 10px rgba(0,240,255,0.08);
+  }
+  .hero h1{font-size:clamp(2.4rem,5vw,3.8rem);margin-bottom:1.3rem;}
+  .neon-word{color:var(--neon);text-shadow:0 0 16px var(--neon-glow),0 0 50px rgba(0,240,255,0.25);}
+  .hero .lede{font-size:1.18rem;color:var(--ink-soft);max-width:38ch;margin-bottom:2rem;font-weight:500;line-height:1.7;}
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+  .reassure{margin-top:1.4rem;font-size:0.9rem;color:var(--ink-soft);font-weight:500;}
+  .reassure b{color:var(--neon);}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1a73e8;
-        }
+  /* animations */
+  .rise{opacity:0;transform:translateY(18px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;}
+  .d1{animation-delay:.05s;}.d2{animation-delay:.15s;}.d3{animation-delay:.25s;}
+  .d4{animation-delay:.35s;}.d5{animation-delay:.5s;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
 
-        nav a {
-            margin-left: 2rem;
-            text-decoration: none;
-            color: #333;
-            transition: color 0.3s;
-        }
+  /* mock card */
+  .mock{
+    background:var(--bg-card);border-radius:8px;
+    border:1px solid var(--line);
+    padding:1.2rem;transform:rotate(2deg);
+    box-shadow:0 0 0 1px var(--line),0 0 50px rgba(0,240,255,0.07),0 30px 60px -20px rgba(0,0,0,0.9);
+    transition:transform .4s ease,box-shadow .4s ease;
+  }
+  .mock:hover{
+    transform:rotate(0deg) translateY(-6px);
+    box-shadow:0 0 0 1px rgba(0,240,255,0.3),0 0 60px rgba(0,240,255,0.14),0 30px 60px -20px rgba(0,0,0,0.9);
+  }
+  .mock-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem;}
+  .mock-av{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--neon),var(--hot));
+    box-shadow:0 0 14px var(--neon-glow);
+  }
+  .mock-name{font-weight:700;font-size:0.9rem;color:var(--ink);}
+  .mock-sub{font-size:0.72rem;color:var(--ink-soft);}
+  .mock-badge{
+    margin-left:auto;font-family:'Orbitron',sans-serif;font-size:0.55rem;
+    font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--neon);background:var(--neon-dim);border:1px solid var(--line);
+    padding:0.2rem 0.55rem;border-radius:3px;
+  }
+  .mock-img{
+    border-radius:6px;height:180px;margin-bottom:0.9rem;
+    background:linear-gradient(135deg,#0a1628 0%,#0d1f40 45%,#1a0a2e 100%);
+    border:1px solid var(--line);position:relative;overflow:hidden;
+  }
+  .mock-img::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 30% 30%,rgba(0,240,255,0.18),transparent 55%),
+               radial-gradient(ellipse at 80% 75%,rgba(255,46,99,0.14),transparent 55%);
+  }
+  .mock-img::after{
+    content:"// AI GENERATED IMAGE";
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    letter-spacing:0.12em;color:rgba(0,240,255,0.5);
+  }
+  .mock-caption{font-size:0.9rem;line-height:1.5;color:var(--ink);}
+  .mock-caption b{color:var(--neon);text-shadow:0 0 8px var(--neon-glow);}
+  .mock-actions{display:flex;gap:1.1rem;margin-top:0.8rem;font-size:1rem;color:var(--ink-soft);}
 
-        nav a:hover {
-            color: #1a73e8;
-        }
+  /* sep */
+  .sep{height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);opacity:0.18;position:relative;z-index:1;}
 
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
+  /* sections */
+  section.block{padding:5rem 0;position:relative;z-index:1;}
+  .kicker{
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.16em;
+    color:var(--neon);text-shadow:0 0 8px var(--neon-glow);
+    margin-bottom:0.75rem;text-align:center;
+  }
+  .block h2{font-size:clamp(1.8rem,3.5vw,2.6rem);text-align:center;margin-bottom:0.6rem;}
+  .block .sub{text-align:center;color:var(--ink-soft);max-width:52ch;margin:0 auto 3rem;font-size:1.08rem;font-weight:500;}
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+  .step{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:6px;
+    padding:2rem 1.6rem;position:relative;overflow:hidden;
+    transition:border-color .25s,box-shadow .25s;
+  }
+  .step:hover{border-color:rgba(0,240,255,0.28);box-shadow:0 0 35px rgba(0,240,255,0.07);}
+  .step::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--neon),transparent);opacity:0.4;
+  }
+  .step .num{
+    font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:800;
+    color:var(--neon);text-shadow:0 0 16px var(--neon-glow);
+    line-height:1;margin-bottom:1rem;
+  }
+  .step h3{font-size:1.05rem;margin-bottom:0.5rem;letter-spacing:0.03em;}
+  .step p{color:var(--ink-soft);font-size:1rem;}
 
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-        }
+  /* values */
+  .values{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .val-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:1rem;}
+  .val{text-align:center;}
+  .val .ic{font-size:1.8rem;margin-bottom:0.6rem;filter:drop-shadow(0 0 8px var(--neon-glow));}
+  .val h4{font-family:'Orbitron',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;margin-bottom:0.4rem;color:var(--ink);}
+  .val p{color:var(--ink-soft);font-size:0.95rem;}
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+  /* pricing */
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;align-items:stretch;}
+  .plan{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:6px;
+    padding:2.2rem 1.9rem;display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+    transition:border-color .25s,box-shadow .25s;
+  }
+  .plan::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(0,240,255,0.35),transparent);
+  }
+  .plan:hover{border-color:rgba(0,240,255,0.22);box-shadow:0 0 40px rgba(0,240,255,0.06);}
+  .plan.featured{
+    border-color:var(--hot);
+    box-shadow:0 0 0 1px rgba(255,46,99,0.2),0 0 55px rgba(255,46,99,0.09);
+  }
+  .plan.featured::before{background:linear-gradient(90deg,transparent,var(--hot),transparent);opacity:0.5;}
+  .tag{
+    position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+    font-family:'Orbitron',sans-serif;background:var(--hot);color:#fff;
+    font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+    padding:0.3rem 1rem;border-radius:0 0 5px 5px;
+    box-shadow:0 0 14px var(--hot-glow);
+  }
+  .plan h3{font-size:1.1rem;margin-bottom:0.3rem;letter-spacing:0.05em;}
+  .plan .tagline{color:var(--ink-soft);font-size:0.9rem;margin-bottom:1.2rem;font-weight:500;}
+  .plan .price{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:800;line-height:1;color:var(--neon);text-shadow:0 0 16px var(--neon-glow);}
+  .plan .price span{font-family:'Rajdhani',sans-serif;font-size:0.9rem;color:var(--ink-soft);font-weight:500;}
+  .plan ul{list-style:none;margin:1.5rem 0;display:flex;flex-direction:column;gap:0.7rem;flex-grow:1;}
+  .plan li{padding-left:1.5rem;position:relative;color:var(--ink-soft);font-size:1rem;font-weight:500;}
+  .plan li::before{content:"›";position:absolute;left:0;top:0;color:var(--neon);font-weight:900;font-size:1.1rem;}
+  .plan li b{color:var(--ink);font-weight:700;}
+  .plan .btn{width:100%;text-align:center;}
 
-        .btn {
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-        }
+  /* closing */
+  .closing{text-align:center;padding:5rem 0;position:relative;z-index:1;}
+  .closing-card{
+    background:var(--bg-card);border-radius:10px;padding:4.5rem 2rem;
+    border:1px solid var(--line);
+    box-shadow:0 0 0 1px var(--line),0 0 90px rgba(0,240,255,0.07);
+    position:relative;overflow:hidden;
+  }
+  .closing-card::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 0%,rgba(0,240,255,0.07),transparent 60%);
+    pointer-events:none;
+  }
+  .closing-card h2{position:relative;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:1rem;}
+  .closing-card p{position:relative;color:var(--ink-soft);max-width:44ch;margin:0 auto 2rem;font-size:1.1rem;font-weight:500;}
 
-        .btn-primary {
-            background: white;
-            color: #667eea;
-        }
+  footer{border-top:1px solid var(--line);padding:2.5rem 0;position:relative;z-index:1;}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--ink-soft);font-size:0.85rem;}
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .how-it-works {
-            padding: 4rem 2rem;
-            background: #f9f9f9;
-            text-align: center;
-        }
-
-        .how-it-works h2 {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #333;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .step {
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .step-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .step h3 {
-            margin-bottom: 0.5rem;
-            color: #667eea;
-        }
-
-        .pricing {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pricing h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #333;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .pricing-card {
-            border: 2px solid #eee;
-            border-radius: 12px;
-            padding: 2rem;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .pricing-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-        }
-
-        .pricing-card.popular {
-            border-color: #667eea;
-            transform: scale(1.05);
-        }
-
-        .pricing-card.popular::before {
-            content: "MOST POPULAR";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #667eea;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .pricing-card p {
-            color: #666;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 1.5rem;
-        }
-
-        .price span {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        .features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .features li {
-            padding: 0.75rem 0;
-            color: #555;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-
-        .features li::before {
-            content: "✓";
-            color: #667eea;
-            font-weight: bold;
-            margin-right: 0.75rem;
-            font-size: 1.2rem;
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .pricing-card.popular {
-                transform: scale(1);
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:2.5rem;}
+    .mock{max-width:380px;margin:0 auto;transform:rotate(1deg);}
+    .steps,.val-grid,.pricing{grid-template-columns:1fr;}
+    .nav-links a:not(.btn){display:none;}
+    .val-grid{gap:2rem;}
+  }
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="logo">🚀 AI Content Creator</div>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#cta">Get Started</a>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>AI-Powered Content for Every Platform</h1>
-        <p>One topic. Infinite platforms. Let Claude write platform-specific content. Auto-post to Twitter, Instagram, Facebook, and LinkedIn daily.</p>
-        <div class="hero-buttons">
-            <a href="#pricing" class="btn btn-primary">Get Started</a>
-            <a href="#features" class="btn btn-secondary">Learn More</a>
+<header>
+  <div class="wrap nav">
+    <div class="brand">MOVEMENTUM <span class="brand-ai">AI</span></div>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="btn btn-neon">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow rise d1">⬡ AI-powered social automation</span>
+      <h1 class="rise d2">Your social media,<br><span class="neon-word">automated.</span></h1>
+      <p class="lede rise d3">Claude writes on-brand posts for your business and deploys them to Facebook and Instagram every day — completely hands-off.</p>
+      <div class="hero-cta rise d4">
+        <a href="#pricing" class="btn btn-neon">Start automating</a>
+        <a href="#how" class="btn btn-outline">See how it works</a>
+      </div>
+      <p class="reassure rise d5">Set up once · <b>Facebook + Instagram</b> · Runs 24/7</p>
+    </div>
+    <div class="rise d4">
+      <div class="mock">
+        <div class="mock-head">
+          <div class="mock-av"></div>
+          <div>
+            <div class="mock-name">Your Business</div>
+            <div class="mock-sub">just now · automated</div>
+          </div>
+          <span class="mock-badge">Auto-posted</span>
         </div>
-    </section>
+        <div class="mock-img"></div>
+        <div class="mock-caption"><b>Stop grinding. Start scaling.</b> 🚀 Let AI handle your daily posts while you focus on what actually grows your business.</div>
+        <div class="mock-actions"><span>♥</span><span>💬</span><span>↗</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="features">
-        <h2>How it works</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-icon">📝</div>
-                <h3>Submit a topic</h3>
-                <p>Choose your frequency and what you want created</p>
-            </div>
-            <div class="step">
-                <div class="step-icon">✨</div>
-                <h3>Claude generates</h3>
-                <p>Platform-optimized versions for each social channel</p>
-            </div>
-            <div class="step">
-                <div class="step-icon">🚀</div>
-                <h3>Auto-posts</h3>
-                <p>Content goes live to all platforms simultaneously</p>
-            </div>
-        </div>
-    </section>
+<div class="sep"></div>
 
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <h2>Simple, transparent pricing</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 3rem;">Choose the plan that fits your needs</p>
-        
-        <div class="pricing-cards">
-            <!-- Starter Plan -->
-            <div class="pricing-card">
-                <h3>Starter</h3>
-                <p>Perfect for solopreneurs</p>
-                <div class="price">$29<span>/month</span></div>
-                <ul class="features">
-                    <li>10 posts/month</li>
-                    <li>Twitter, Instagram, Facebook</li>
-                    <li>Platform-optimized</li>
-                    <li>Email confirmation</li>
-                </ul>
-                <a href="https://buy.stripe.com/cNicN69Eo8GkgzMaw2ejK02" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
-            </div>
+<section class="block" id="how">
+  <div class="wrap">
+    <p class="kicker">// Protocol</p>
+    <h2>Three steps. Then it runs itself.</h2>
+    <p class="sub">No dashboards to babysit. No daily logins. You give us a topic — we handle the rest.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Submit your brief</h3>
+        <p>Tell us your industry, brand voice, and the topics you want to focus on this week or month.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>AI generates</h3>
+        <p>On-brand captions and matching images, tailored to your business every single time.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Auto-deploys</h3>
+        <p>Your post goes live on Facebook and Instagram automatically — on your schedule.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <!-- Creator Plan (Most Popular) -->
-            <div class="pricing-card popular">
-                <h3>Creator</h3>
-                <p>For content creators</p>
-                <div class="price">$79<span>/month</span></div>
-                <ul class="features">
-                    <li>30 posts/month</li>
-                    <li>All platforms + LinkedIn</li>
-                    <li>Custom hashtag strategy</li>
-                    <li>Weekly performance reports</li>
-                </ul>
-                <a href="https://buy.stripe.com/bJe9AU7wgcWA1EScEaejK01" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
-            </div>
+<div class="sep"></div>
 
-            <!-- Agency Plan -->
-            <div class="pricing-card">
-                <h3>Agency</h3>
-                <p>For agencies & teams</p>
-                <div class="price">$199<span>/month</span></div>
-                <ul class="features">
-                    <li>Unlimited posts</li>
-                    <li>All platforms + TikTok</li>
-                    <li>Custom brand voice</li>
-                    <li>Priority support</li>
-                </ul>
-                <a href="https://buy.stripe.com/7sYbJ2dUE7CgfvIeMiejK00" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
-            </div>
-        </div>
-    </section>
+<section class="block values">
+  <div class="wrap">
+    <p class="kicker">// System output</p>
+    <h2>Built to run 24/7</h2>
+    <div class="val-grid">
+      <div class="val"><div class="ic">📅</div><h4>Daily presence</h4><p>Fresh posts every day without you lifting a finger.</p></div>
+      <div class="val"><div class="ic">🎯</div><h4>On-brand</h4><p>Content matches your voice, industry, and weekly focus.</p></div>
+      <div class="val"><div class="ic">📷</div><h4>Image included</h4><p>Every post ships with a relevant, eye-catching photo.</p></div>
+      <div class="val"><div class="ic">⚡</div><h4>Fully automated</h4><p>Set it once. It runs itself, quietly, every day.</p></div>
+    </div>
+  </div>
+</section>
 
-    <!-- CTA Section -->
-    <section class="cta-section" id="cta">
-        <h2>Ready to scale your content?</h2>
-        <a href="#pricing" class="btn btn-secondary">Choose Your Plan</a>
-    </section>
+<div class="sep"></div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 AI Content Creator. All rights reserved.</p>
-    </footer>
+<section class="block" id="pricing">
+  <div class="wrap">
+    <p class="kicker">// Select tier</p>
+    <h2>Simple, transparent pricing</h2>
+    <p class="sub">Every plan posts to Facebook and Instagram. Pick the cadence that fits your business.</p>
+    <div class="pricing">
+      <div class="plan">
+        <h3>Starter</h3>
+        <p class="tagline">For solopreneurs</p>
+        <div class="price">$29<span> / mo</span></div>
+        <ul>
+          <li><b>3 posts per week</b></li>
+          <li>Facebook + Instagram</li>
+          <li>Weekly content brief</li>
+          <li>On-brand captions &amp; images</li>
+          <li>1 business page</li>
+        </ul>
+        <a href="https://buy.stripe.com/cNicN69Eo8GkgzMaw2ejK02" class="btn btn-neon">Initialize →</a>
+      </div>
+      <div class="plan featured">
+        <span class="tag">Most popular</span>
+        <h3>Creator</h3>
+        <p class="tagline">For growing brands</p>
+        <div class="price">$79<span> / mo</span></div>
+        <ul>
+          <li><b>Daily posts — 30/month</b></li>
+          <li>Facebook + Instagram</li>
+          <li>Monthly content brief</li>
+          <li>Custom brand voice &amp; hashtags</li>
+          <li>Up to 3 pages / locations</li>
+        </ul>
+        <a href="https://buy.stripe.com/bJe9AU7wgcWA1EScEaejK01" class="btn btn-hot">Initialize →</a>
+      </div>
+      <div class="plan">
+        <h3>Agency</h3>
+        <p class="tagline">For agencies &amp; teams</p>
+        <div class="price">$199<span> / mo</span></div>
+        <ul>
+          <li><b>Post on your schedule</b></li>
+          <li>Facebook + Instagram</li>
+          <li>On-demand content briefs</li>
+          <li>Custom brand voice &amp; hashtags</li>
+          <li>Up to 10 pages / locations</li>
+        </ul>
+        <a href="https://buy.stripe.com/7sYbJ2dUE7CgfvIeMiejK00" class="btn btn-neon">Initialize →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<section class="closing">
+  <div class="wrap">
+    <div class="closing-card">
+      <h2>Stop posting manually.</h2>
+      <p>Let your social media run on autopilot while you build your business.</p>
+      <a href="#pricing" class="btn btn-neon">Choose your tier</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand">MOVEMENTUM <span class="brand-ai">AI</span></div>
+    <div>© 2026 Movementum AI. All rights reserved.</div>
+  </div>
+</footer>
+
 </body>
 </html>
