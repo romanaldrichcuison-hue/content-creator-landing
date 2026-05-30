@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movementum AI — Social Media on Autopilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #06070F;
+    --bg-2:     #0C0E1C;
+    --bg-card:  #0E1124;
+    --ink:      #E4EDFF;
+    --ink-soft: #7A8EAE;
+    --neon:     #00F0FF;
+    --neon-glow:rgba(0,240,255,0.45);
+    --neon-dim: rgba(0,240,255,0.07);
+    --hot:      #FF2E63;
+    --hot-glow: rgba(255,46,99,0.45);
+    --line:     rgba(0,240,255,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Rajdhani',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    font-size:17px;
+  }
+  /* grid bg */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,240,255,0.028) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,240,255,0.028) 1px,transparent 1px);
+    background-size:48px 48px;
+  }
+  /* scanlines */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:repeating-linear-gradient(
+      0deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,
+      transparent 1px,transparent 3px);
+  }
+  h1,h2,h3{font-family:'Orbitron',sans-serif;font-weight:700;line-height:1.1;letter-spacing:0.01em;}
+  a{text-decoration:none;color:inherit;}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1;}
+
+  /* ── NAV ── */
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(18px);
+    background:rgba(6,7,15,0.88);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;}
+  .brand{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;}
+  .brand-ai{color:var(--neon);text-shadow:0 0 14px var(--neon-glow);}
+  .nav-links{display:flex;align-items:center;gap:2rem;}
+  .nav-links a{font-weight:600;font-size:0.82rem;color:var(--ink-soft);letter-spacing:0.07em;text-transform:uppercase;transition:color .2s;}
+  .nav-links a:hover{color:var(--neon);}
+  .btn{
+    display:inline-block;font-family:'Orbitron',sans-serif;font-weight:600;
+    font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;
+    padding:0.75rem 1.5rem;border-radius:3px;transition:all .2s;
+    cursor:pointer;border:none;white-space:nowrap;
+  }
+  .btn-neon{
+    background:transparent;color:var(--neon);border:1.5px solid var(--neon);
+    box-shadow:0 0 14px rgba(0,240,255,0.25),inset 0 0 14px rgba(0,240,255,0.04);
+  }
+  .btn-neon:hover{
+    background:var(--neon);color:var(--bg);
+    box-shadow:0 0 28px var(--neon-glow),0 0 56px rgba(0,240,255,0.25);
+    transform:translateY(-2px);
+  }
+  .btn-hot{
+    background:transparent;color:var(--hot);border:1.5px solid var(--hot);
+    box-shadow:0 0 14px rgba(255,46,99,0.25),inset 0 0 14px rgba(255,46,99,0.04);
+  }
+  .btn-hot:hover{
+    background:var(--hot);color:#fff;
+    box-shadow:0 0 28px var(--hot-glow),0 0 56px rgba(255,46,99,0.25);
+    transform:translateY(-2px);
+  }
+  .btn-outline{
+    background:transparent;color:var(--ink);
+    border:1.5px solid rgba(255,255,255,0.18);
+  }
+  .btn-outline:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-2px);}
+
+  /* ── HERO ── */
+  .hero{padding:6rem 0 5rem;position:relative;z-index:1;}
+  .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:3.5rem;align-items:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.14em;color:var(--neon);
+    background:var(--neon-dim);border:1px solid var(--line);
+    padding:0.45rem 1rem;border-radius:3px;margin-bottom:1.5rem;
+    box-shadow:0 0 10px rgba(0,240,255,0.08);
+  }
+  .hero h1{font-size:clamp(2.4rem,5vw,3.8rem);margin-bottom:1.3rem;}
+  .neon-word{color:var(--neon);text-shadow:0 0 16px var(--neon-glow),0 0 50px rgba(0,240,255,0.25);}
+  .hero .lede{font-size:1.18rem;color:var(--ink-soft);max-width:38ch;margin-bottom:2rem;font-weight:500;line-height:1.7;}
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+  .reassure{margin-top:1.4rem;font-size:0.9rem;color:var(--ink-soft);font-weight:500;}
+  .reassure b{color:var(--neon);}
+
+  /* animations */
+  .rise{opacity:0;transform:translateY(18px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;}
+  .d1{animation-delay:.05s;}.d2{animation-delay:.15s;}.d3{animation-delay:.25s;}
+  .d4{animation-delay:.35s;}.d5{animation-delay:.5s;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+
+  /* mock card */
+  .mock{
+    background:var(--bg-card);border-radius:8px;
+    border:1px solid var(--line);
+    padding:1.2rem;transform:rotate(2deg);
+    box-shadow:0 0 0 1px var(--line),0 0 50px rgba(0,240,255,0.07),0 30px 60px -20px rgba(0,0,0,0.9);
+    transition:transform .4s ease,box-shadow .4s ease;
+  }
+  .mock:hover{
+    transform:rotate(0deg) translateY(-6px);
+    box-shadow:0 0 0 1px rgba(0,240,255,0.3),0 0 60px rgba(0,240,255,0.14),0 30px 60px -20px rgba(0,0,0,0.9);
+  }
+  .mock-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem;}
+  .mock-av{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--neon),var(--hot));
+    box-shadow:0 0 14px var(--neon-glow);
+  }
+  .mock-name{font-weight:700;font-size:0.9rem;color:var(--ink);}
+  .mock-sub{font-size:0.72rem;color:var(--ink-soft);}
+  .mock-badge{
+    margin-left:auto;font-family:'Orbitron',sans-serif;font-size:0.55rem;
+    font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--neon);background:var(--neon-dim);border:1px solid var(--line);
+    padding:0.2rem 0.55rem;border-radius:3px;
+  }
+  .mock-img{
+    border-radius:6px;height:180px;margin-bottom:0.9rem;
+    background:linear-gradient(135deg,#0a1628 0%,#0d1f40 45%,#1a0a2e 100%);
+    border:1px solid var(--line);position:relative;overflow:hidden;
+  }
+  .mock-img::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 30% 30%,rgba(0,240,255,0.18),transparent 55%),
+               radial-gradient(ellipse at 80% 75%,rgba(255,46,99,0.14),transparent 55%);
+  }
+  .mock-img::after{
+    content:"// AI GENERATED IMAGE";
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    letter-spacing:0.12em;color:rgba(0,240,255,0.5);
+  }
+  .mock-caption{font-size:0.9rem;line-height:1.5;color:var(--ink);}
+  .mock-caption b{color:var(--neon);text-shadow:0 0 8px var(--neon-glow);}
+  .mock-actions{display:flex;gap:1.1rem;margin-top:0.8rem;font-size:1rem;color:var(--ink-soft);}
+
+  /* sep */
+  .sep{height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);opacity:0.18;position:relative;z-index:1;}
+
+  /* sections */
+  section.block{padding:5rem 0;position:relative;z-index:1;}
+  .kicker{
+    font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.16em;
+    color:var(--neon);text-shadow:0 0 8px var(--neon-glow);
+    margin-bottom:0.75rem;text-align:center;
+  }
+  .block h2{font-size:clamp(1.8rem,3.5vw,2.6rem);text-align:center;margin-bottom:0.6rem;}
+  .block .sub{text-align:center;color:var(--ink-soft);max-width:52ch;margin:0 auto 3rem;font-size:1.08rem;font-weight:500;}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+  .step{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:6px;
+    padding:2rem 1.6rem;position:relative;overflow:hidden;
+    transition:border-color .25s,box-shadow .25s;
+  }
+  .step:hover{border-color:rgba(0,240,255,0.28);box-shadow:0 0 35px rgba(0,240,255,0.07);}
+  .step::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--neon),transparent);opacity:0.4;
+  }
+  .step .num{
+    font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:800;
+    color:var(--neon);text-shadow:0 0 16px var(--neon-glow);
+    line-height:1;margin-bottom:1rem;
+  }
+  .step h3{font-size:1.05rem;margin-bottom:0.5rem;letter-spacing:0.03em;}
+  .step p{color:var(--ink-soft);font-size:1rem;}
+
+  /* values */
+  .values{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .val-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:1rem;}
+  .val{text-align:center;}
+  .val .ic{font-size:1.8rem;margin-bottom:0.6rem;filter:drop-shadow(0 0 8px var(--neon-glow));}
+  .val h4{font-family:'Orbitron',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;margin-bottom:0.4rem;color:var(--ink);}
+  .val p{color:var(--ink-soft);font-size:0.95rem;}
+
+  /* pricing */
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;align-items:stretch;}
+  .plan{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:6px;
+    padding:2.2rem 1.9rem;display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+    transition:border-color .25s,box-shadow .25s;
+  }
+  .plan::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(0,240,255,0.35),transparent);
+  }
+  .plan:hover{border-color:rgba(0,240,255,0.22);box-shadow:0 0 40px rgba(0,240,255,0.06);}
+  .plan.featured{
+    border-color:var(--hot);
+    box-shadow:0 0 0 1px rgba(255,46,99,0.2),0 0 55px rgba(255,46,99,0.09);
+  }
+  .plan.featured::before{background:linear-gradient(90deg,transparent,var(--hot),transparent);opacity:0.5;}
+  .tag{
+    position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+    font-family:'Orbitron',sans-serif;background:var(--hot);color:#fff;
+    font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+    padding:0.3rem 1rem;border-radius:0 0 5px 5px;
+    box-shadow:0 0 14px var(--hot-glow);
+  }
+  .plan h3{font-size:1.1rem;margin-bottom:0.3rem;letter-spacing:0.05em;}
+  .plan .tagline{color:var(--ink-soft);font-size:0.9rem;margin-bottom:1.2rem;font-weight:500;}
+  .plan .price{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:800;line-height:1;color:var(--neon);text-shadow:0 0 16px var(--neon-glow);}
+  .plan .price span{font-family:'Rajdhani',sans-serif;font-size:0.9rem;color:var(--ink-soft);font-weight:500;}
+  .plan ul{list-style:none;margin:1.5rem 0;display:flex;flex-direction:column;gap:0.7rem;flex-grow:1;}
+  .plan li{padding-left:1.5rem;position:relative;color:var(--ink-soft);font-size:1rem;font-weight:500;}
+  .plan li::before{content:"›";position:absolute;left:0;top:0;color:var(--neon);font-weight:900;font-size:1.1rem;}
+  .plan li b{color:var(--ink);font-weight:700;}
+  .plan .btn{width:100%;text-align:center;}
+
+  /* closing */
+  .closing{text-align:center;padding:5rem 0;position:relative;z-index:1;}
+  .closing-card{
+    background:var(--bg-card);border-radius:10px;padding:4.5rem 2rem;
+    border:1px solid var(--line);
+    box-shadow:0 0 0 1px var(--line),0 0 90px rgba(0,240,255,0.07);
+    position:relative;overflow:hidden;
+  }
+  .closing-card::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 0%,rgba(0,240,255,0.07),transparent 60%);
+    pointer-events:none;
+  }
+  .closing-card h2{position:relative;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:1rem;}
+  .closing-card p{position:relative;color:var(--ink-soft);max-width:44ch;margin:0 auto 2rem;font-size:1.1rem;font-weight:500;}
+
+  footer{border-top:1px solid var(--line);padding:2.5rem 0;position:relative;z-index:1;}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--ink-soft);font-size:0.85rem;}
+
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:2.5rem;}
+    .mock{max-width:380px;margin:0 auto;transform:rotate(1deg);}
+    .steps,.val-grid,.pricing{grid-template-columns:1fr;}
+    .nav-links a:not(.btn){display:none;}
+    .val-grid{gap:2rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">MOVEMENTUM <span class="brand-ai">AI</span></div>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="btn btn-neon">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow rise d1">⬡ AI-powered social automation</span>
+      <h1 class="rise d2">Your social media,<br><span class="neon-word">automated.</span></h1>
+      <p class="lede rise d3">Claude writes on-brand posts for your business and deploys them to Facebook and Instagram every day — completely hands-off.</p>
+      <div class="hero-cta rise d4">
+        <a href="#pricing" class="btn btn-neon">Start automating</a>
+        <a href="#how" class="btn btn-outline">See how it works</a>
+      </div>
+      <p class="reassure rise d5">Set up once · <b>Facebook + Instagram</b> · Runs 24/7</p>
+    </div>
+    <div class="rise d4">
+      <div class="mock">
+        <div class="mock-head">
+          <div class="mock-av"></div>
+          <div>
+            <div class="mock-name">Your Business</div>
+            <div class="mock-sub">just now · automated</div>
+          </div>
+          <span class="mock-badge">Auto-posted</span>
+        </div>
+        <div class="mock-img"></div>
+        <div class="mock-caption"><b>Stop grinding. Start scaling.</b> 🚀 Let AI handle your daily posts while you focus on what actually grows your business.</div>
+        <div class="mock-actions"><span>♥</span><span>💬</span><span>↗</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<section class="block" id="how">
+  <div class="wrap">
+    <p class="kicker">// Protocol</p>
+    <h2>Three steps. Then it runs itself.</h2>
+    <p class="sub">No dashboards to babysit. No daily logins. You give us a topic — we handle the rest.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Submit your brief</h3>
+        <p>Tell us your industry, brand voice, and the topics you want to focus on this week or month.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>AI generates</h3>
+        <p>On-brand captions and matching images, tailored to your business every single time.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Auto-deploys</h3>
+        <p>Your post goes live on Facebook and Instagram automatically — on your schedule.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<section class="block values">
+  <div class="wrap">
+    <p class="kicker">// System output</p>
+    <h2>Built to run 24/7</h2>
+    <div class="val-grid">
+      <div class="val"><div class="ic">📅</div><h4>Daily presence</h4><p>Fresh posts every day without you lifting a finger.</p></div>
+      <div class="val"><div class="ic">🎯</div><h4>On-brand</h4><p>Content matches your voice, industry, and weekly focus.</p></div>
+      <div class="val"><div class="ic">📷</div><h4>Image included</h4><p>Every post ships with a relevant, eye-catching photo.</p></div>
+      <div class="val"><div class="ic">⚡</div><h4>Fully automated</h4><p>Set it once. It runs itself, quietly, every day.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<section class="block" id="pricing">
+  <div class="wrap">
+    <p class="kicker">// Select tier</p>
+    <h2>Simple, transparent pricing</h2>
+    <p class="sub">Every plan posts to Facebook and Instagram. Pick the cadence that fits your business.</p>
+    <div class="pricing">
+      <div class="plan">
+        <h3>Starter</h3>
+        <p class="tagline">For solopreneurs</p>
+        <div class="price">$29<span> / mo</span></div>
+        <ul>
+          <li><b>3 posts per week</b></li>
+          <li>Facebook + Instagram</li>
+          <li>Weekly content brief</li>
+          <li>On-brand captions &amp; images</li>
+          <li>1 business page</li>
+        </ul>
+        <a href="https://buy.stripe.com/cNicN69Eo8GkgzMaw2ejK02" class="btn btn-neon">Initialize →</a>
+      </div>
+      <div class="plan featured">
+        <span class="tag">Most popular</span>
+        <h3>Creator</h3>
+        <p class="tagline">For growing brands</p>
+        <div class="price">$79<span> / mo</span></div>
+        <ul>
+          <li><b>Daily posts — 30/month</b></li>
+          <li>Facebook + Instagram</li>
+          <li>Monthly content brief</li>
+          <li>Custom brand voice &amp; hashtags</li>
+          <li>Up to 3 pages / locations</li>
+        </ul>
+        <a href="https://buy.stripe.com/bJe9AU7wgcWA1EScEaejK01" class="btn btn-hot">Initialize →</a>
+      </div>
+      <div class="plan">
+        <h3>Agency</h3>
+        <p class="tagline">For agencies &amp; teams</p>
+        <div class="price">$199<span> / mo</span></div>
+        <ul>
+          <li><b>Post on your schedule</b></li>
+          <li>Facebook + Instagram</li>
+          <li>On-demand content briefs</li>
+          <li>Custom brand voice &amp; hashtags</li>
+          <li>Up to 10 pages / locations</li>
+        </ul>
+        <a href="https://buy.stripe.com/7sYbJ2dUE7CgfvIeMiejK00" class="btn btn-neon">Initialize →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<section class="closing">
+  <div class="wrap">
+    <div class="closing-card">
+      <h2>Stop posting manually.</h2>
+      <p>Let your social media run on autopilot while you build your business.</p>
+      <a href="#pricing" class="btn btn-neon">Choose your tier</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand">MOVEMENTUM <span class="brand-ai">AI</span></div>
+    <div>© 2026 Movementum AI. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
