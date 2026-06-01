@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT Exam Reviewer</title>
+<meta name="description" content="All-in-one study tool for ACE, NASM, and ISSA personal trainer certification exams — flashcards, practice quizzes, and reference guides.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=DM+Sans:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --color-text-primary:#1a1c20;
+  --color-text-secondary:#6b7280;
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f4f5f3;
+  --color-background-tertiary:#eceee9;
+  --color-border-tertiary:rgba(0,0,0,0.1);
+  --color-border-secondary:rgba(0,0,0,0.18);
+  --color-border-primary:rgba(0,0,0,0.3);
+  --border-radius-md:8px;
+  --border-radius-lg:12px;
+  --page-bg:#f7f8f6;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#e8eaed;
+    --color-text-secondary:#969ba5;
+    --color-background-primary:#161920;
+    --color-background-secondary:#1c2029;
+    --color-background-tertiary:#22262f;
+    --color-border-tertiary:rgba(255,255,255,0.1);
+    --color-border-secondary:rgba(255,255,255,0.18);
+    --color-border-primary:rgba(255,255,255,0.3);
+    --page-bg:#0f1115;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--page-bg)}
+body{font-family:'DM Sans',sans-serif;color:var(--color-text-primary);font-size:14px;line-height:1.5;padding:24px 16px;min-height:100vh}
+#pta{max-width:760px;margin:0 auto}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.brand{font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;letter-spacing:0.5px}
+.tabs{display:flex;gap:2px}
+.tb{background:none;border:none;padding:7px 13px;font-size:13px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;border-radius:var(--border-radius-md);font-family:inherit;transition:all .15s}
+.tb:hover{background:var(--color-background-secondary)}
+.tb.active{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.cbar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.cbar label{font-size:11px;color:var(--color-text-secondary);font-weight:500;letter-spacing:.3px}
+.cp{border:0.5px solid var(--color-border-secondary);background:none;padding:4px 13px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);font-family:inherit;transition:all .15s}
+.cp[data-c="ALL"].on{color:#1D9E75;border-color:#1D9E75;background:#E1F5EE}
+.cp[data-c="NASM"].on{color:#185FA5;border-color:#185FA5;background:#E6F1FB}
+.cp[data-c="ACE"].on{color:#BA7517;border-color:#BA7517;background:#FAEEDA}
+.cp[data-c="ISSA"].on{color:#534AB7;border-color:#534AB7;background:#EEEDFE}
+.panel{display:none}.panel.active{display:block}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:99px;letter-spacing:.2px}
+.bNASM{color:#185FA5;background:#E6F1FB}.bACE{color:#BA7517;background:#FAEEDA}.bISSA{color:#534AB7;background:#EEEDFE}.bALL{color:#1D9E75;background:#E1F5EE}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:18px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:20px}
+.scard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px;text-align:center}
+.snum{font-family:'Oswald',sans-serif;font-size:34px;font-weight:500;line-height:1}
+.slabel{font-size:11px;color:var(--color-text-secondary);margin-top:4px}
+.prog{height:3px;background:var(--color-border-tertiary);border-radius:2px;margin:10px 0 20px;overflow:hidden}
+.progf{height:100%;border-radius:2px;transition:width .3s;background:#185FA5}
+.flip-wrap{perspective:1000px;height:248px;margin-bottom:16px;cursor:pointer;user-select:none}
+.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s ease}
+.flip-inner.flipped{transform:rotateY(180deg)}
+.flip-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:22px;display:flex;flex-direction:column;justify-content:space-between}
+.flip-back{transform:rotateY(180deg);background:var(--color-background-secondary);overflow:hidden}
+.fback-body{flex:1;overflow-y:auto;padding-right:4px;font-size:13px;line-height:1.85;color:var(--color-text-secondary);white-space:pre-wrap;margin-top:8px}
+.nav-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+.btn{background:none;border:0.5px solid var(--color-border-secondary);padding:9px 20px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;color:var(--color-text-primary);font-family:inherit;transition:all .15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn.primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.opt{width:100%;text-align:left;padding:11px 15px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:14px;font-family:inherit;color:var(--color-text-primary);cursor:pointer;margin-bottom:8px;transition:border-color .1s;display:flex;align-items:flex-start;gap:10px}
+.opt:not(:disabled):hover{border-color:var(--color-border-primary)}
+.opt.ok{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.opt.no{border-color:#E24B4A;background:#FCEBEB;color:#501313}
+.expbox{border-radius:var(--border-radius-md);padding:14px;margin-bottom:16px;font-size:13px;line-height:1.7}
+.expbox.ok{background:#E1F5EE;border:0.5px solid #9FE1CB;color:#085041}
+.expbox.no{background:#FCEBEB;border:0.5px solid #F7C1C1;color:#501313}
+.tcont{white-space:pre-wrap;font-size:13px;line-height:1.85;color:var(--color-text-secondary);margin-top:10px}
+.cert-tab-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.ctab{background:none;border:0.5px solid var(--color-border-secondary);padding:6px 16px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);font-family:inherit}
+.ctab.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+h2.sh{font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;margin-bottom:16px;letter-spacing:.3px}
+.foot{margin-top:32px;padding-top:16px;border-top:0.5px solid var(--color-border-tertiary);font-size:11px;color:var(--color-text-secondary);text-align:center;line-height:1.7}
+@media(prefers-color-scheme:dark){
+.cp[data-c="ALL"].on{color:#5DCAA5;border-color:#5DCAA5;background:#04342C}
+.cp[data-c="NASM"].on{color:#85B7EB;border-color:#85B7EB;background:#042C53}
+.cp[data-c="ACE"].on{color:#FAC775;border-color:#FAC775;background:#412402}
+.cp[data-c="ISSA"].on{color:#AFA9EC;border-color:#AFA9EC;background:#26215C}
+.bNASM{color:#85B7EB;background:#042C53}.bACE{color:#FAC775;background:#412402}.bISSA{color:#AFA9EC;background:#26215C}.bALL{color:#5DCAA5;background:#04342C}
+.opt.ok{border-color:#5DCAA5;background:#04342C;color:#9FE1CB}
+.opt.no{border-color:#F09595;background:#501313;color:#F7C1C1}
+.expbox.ok{background:#04342C;border-color:#0F6E56;color:#9FE1CB}
+.expbox.no{background:#501313;border-color:#A32D2D;color:#F7C1C1}
+}
+</style>
+</head>
+<body>
+<div id="pta">
+<nav class="nav">
+  <div class="brand"><i class="ti ti-barbell" aria-hidden="true" style="font-size:17px;margin-right:6px"></i>PT Exam Reviewer</div>
+  <div class="tabs">
+    <button class="tb active" data-tab="home">Home</button>
+    <button class="tb" data-tab="topics">Topics</button>
+    <button class="tb" data-tab="cards">Flashcards</button>
+    <button class="tb" data-tab="quiz">Quiz</button>
+  </div>
+</nav>
+<div class="cbar">
+  <label>Cert filter:</label>
+  <button class="cp on" data-c="ALL">All certs</button>
+  <button class="cp" data-c="NASM">NASM</button>
+  <button class="cp" data-c="ACE">ACE</button>
+  <button class="cp" data-c="ISSA">ISSA</button>
+</div>
+<div id="home" class="panel active"></div>
+<div id="topics" class="panel"></div>
+<div id="cards" class="panel"></div>
+<div id="quiz" class="panel"></div>
+<div class="foot">For exam preparation and educational use. Always refer to official ACE, NASM, and ISSA materials for current exam content.</div>
+</div>
+
+<script>
+const FC=[
+["NASM","OPT Model","Phase 1 — Stabilization Endurance","Reps: 12–20 | Sets: 1–3 | Intensity: 50–70% 1RM\nTempo: 4-2-1 (eccentric–isometric–concentric)\nRest: 0–90 sec | Environment: unstable surfaces\n\nGoal: Build joint stability and neuromuscular efficiency\nKey: Master movement quality before adding load"],
+["NASM","OPT Model","Phase 2 — Strength Endurance","Reps: 8–12 | Sets: 2–4 | Intensity: 70–80% 1RM\nRest: 0–60 sec\nFormat: Superset = 1 traditional strength exercise + 1 stabilization exercise (same muscle group)\n\nGoal: Develop strength while maintaining stabilization gains"],
+["NASM","OPT Model","Phase 3 — Hypertrophy","Reps: 6–12 | Sets: 3–5 | Intensity: 75–85% 1RM\nTempo: 2-0-2 | Rest: 0–60 sec | High volume\n\nGoal: Maximize muscle cross-sectional area\nKey: Volume is the primary driver of hypertrophy"],
+["NASM","OPT Model","Phase 4 — Maximal Strength","Reps: 1–5 | Sets: 4–6 | Intensity: 85–100% 1RM\nTempo: Controlled eccentric, explosive concentric\nRest: 3–5 min\n\nGoal: Recruit maximum motor units, increase neural drive\nKey: Low reps, long rest, quality over quantity"],
+["NASM","OPT Model","Phase 5 — Power","Reps: 1–10 | Sets: 3–6 | Intensity: 30–45% 1RM (speed)\nRest: 3–5 min\nFormat: Superset = 1 strength exercise + 1 power/plyometric exercise\n\nGoal: Maximize rate of force development\nKey: MOVE FAST — velocity, not load, is the stimulus"],
+["NASM","Assessment","Overhead Squat: Arms Fall Forward","Overactive: Latissimus dorsi, teres major, pectoralis minor\nUnderative: Mid/lower trapezius, rhomboids, rotator cuff\n\nTip: Tight lats pull the arms down and forward. Program: lat stretching + mid-trap activation (prone Y/T exercises)"],
+["NASM","Assessment","Overhead Squat: Feet Turn Out","Overactive: Soleus, lateral gastrocnemius, biceps femoris (short head)\nUnderative: Medial gastrocnemius, medial hamstrings, gracilis, popliteus\n\nMechanism: Limited ankle dorsiflexion causes foot to externally rotate to compensate"],
+["NASM","Assessment","Overhead Squat: Knees Cave In (Valgus)","Overactive: Adductor complex, TFL, biceps femoris (short head), vastus lateralis\nUnderative: Gluteus medius, gluteus maximus, VMO, tibialis anterior/posterior\n\nCommon in: Women, runners; linked to ACL injury risk"],
+["NASM","Assessment","Overhead Squat: Low Back Arches","Overactive: Hip flexors (iliopsoas, rectus femoris), erector spinae\nUnderative: Gluteus maximus, hamstrings, intrinsic core (TVA, multifidus)\n\nResult: Anterior pelvic tilt — the root of Lower Crossed Syndrome"],
+["NASM","Concepts","Lower Crossed Syndrome","OVERACTIVE (inhibit + lengthen):\n• Hip flexors (iliopsoas, rectus femoris)\n• Erector spinae\n• TFL, latissimus dorsi\n\nUNDERAIVE (activate + strengthen):\n• Gluteus maximus & medius\n• Intrinsic core (TVA, multifidus)\n• Hamstrings\n\nResult: Anterior pelvic tilt + lumbar lordosis"],
+["NASM","Concepts","Upper Crossed Syndrome","OVERACTIVE: Upper trapezius, SCM, levator scapulae, pectoralis major/minor\nUNDERAIVE: Deep cervical flexors, mid/lower trapezius, serratus anterior, rhomboids\n\nResult: Forward head posture + rounded shoulders\nCommon cause: Prolonged sitting at desk"],
+["NASM","Concepts","Muscle Spindle vs. GTO","MUSCLE SPINDLE: Intrafusal fibers | Senses rate + magnitude of STRETCH → triggers stretch REFLEX (contraction)\nUsed in: Plyometrics (SSC), reflexive stability\n\nGOLGI TENDON ORGAN: Musculotendinous junction | Senses excessive TENSION → triggers autogenic INHIBITION (relaxation)\nUsed in: Foam rolling, static stretching"],
+["NASM","Concepts","SAID Principle","Specific Adaptation to Imposed Demands\n\nThe body adapts SPECIFICALLY to the demands placed on it.\n• Load-bearing → bone density\n• Explosive → fast-twitch recruitment\n• Endurance → mitochondrial density, capillary growth\n\nTraining must mimic the desired outcome. Specificity > generality."],
+["NASM","Concepts","GAS — General Adaptation Syndrome","Developed by Hans Selye. 3 stages:\n\n1. ALARM REACTION — initial exposure to stressor; performance temporarily decreases\n2. RESISTANCE — body adapts; performance improves above baseline\n3. EXHAUSTION — overtraining; performance declines below baseline\n\nKey: Periodize training to exploit stages 1–2 before exhaustion"],
+["NASM","Corrective Exercise","Corrective Exercise Continuum","NASM's 4-step corrective sequence:\n\n1. INHIBIT — Self-myofascial release (foam roll) overactive muscles, 30+ sec\n2. LENGTHEN — Static stretch the same overactive muscles\n3. ACTIVATE — Isolated strengthening of underactive muscles\n4. INTEGRATE — Integrated dynamic movement (whole-body, functional)\n\nMnemonic: Inhibit → Lengthen → Activate → Integrate"],
+["NASM","Plyometrics","Plyometric Progression","Mirrors the OPT levels:\n\n1. STABILIZATION — Plyos with a 3–5 sec stick/hold on landing (e.g., squat jump with stabilization)\n2. STRENGTH — Plyos with a repetitive, controlled tempo (e.g., repeat squat jumps)\n3. POWER — Plyos performed as fast as possible (e.g., depth jumps, ice skaters)\n\nKey: Plyometrics train the Stretch-Shortening Cycle (eccentric → amortization → concentric)"],
+["NASM","Concepts","Length-Tension & Force-Couple","LENGTH-TENSION RELATIONSHIP: A muscle generates maximal force at its optimal (resting) length. Too short or too long = less force. Postural distortions shift muscles away from optimal length.\n\nFORCE-COUPLE RELATIONSHIP: Muscles work together (synergistically) to produce movement around a joint. Ex: upward rotation of scapula = upper trap + lower trap + serratus anterior."],
+["NASM","Concepts","Drawing-In vs. Bracing","DRAWING-IN MANEUVER: Pull the navel toward the spine to activate the deep local stabilizers (transverse abdominis, multifidus). Used for core stabilization training.\n\nBRACING: Co-contract the entire abdominal wall + glutes (like preparing to take a punch). Used for heavy lifts and maximal force production."],
+["ACE","IFT Model","ACE IFT Phase 1 — Stability & Mobility","Focus: Joint stability, mobility, posture correction, movement foundation\nCardio: Below VT1 (full conversation possible)\nExercises: Isolated strengthening, corrective exercise, static stretching\n\nClient: Deconditioned, sedentary, postural issues, injury history\nGoal: Establish pain-free, stable movement before loading"],
+["ACE","IFT Model","ACE IFT Phase 2 — Movement","Focus: Fundamental movement patterns — squat, hinge, push, pull, rotate\nCardio: At and slightly above VT1 (slight breathlessness)\nExercises: Functional, multiplanar, movement competency\n\nProgression: Bodyweight → load; bilateral → unilateral; stable → unstable\nGoal: Movement competency and aerobic efficiency"],
+["ACE","IFT Model","ACE IFT Phase 3 — Load","Focus: Progressive resistance training, metabolic conditioning\nCardio: Between VT1 and VT2 (lactate threshold training)\nExercises: Load the patterns from Phase 2 progressively\n\nGoal: Strength, hypertrophy, muscular endurance\nClient: Functionally competent, ready for systematic overload"],
+["ACE","IFT Model","ACE IFT Phase 4 — Performance","Focus: Speed, agility, power, sport-specific fitness\nCardio: At and above VT2 (high-intensity intervals, anaerobic work)\nExercises: Plyometrics, Olympic lifts, maximal efforts\n\nGoal: Peak athletic performance\nClient: Athlete or highly trained individual"],
+["ACE","Behavior Change","ACE Mover Method","A client-centered coaching philosophy based on motivational interviewing:\n\nASK — Use open-ended questions to understand goals, values, readiness\nLISTEN — Actively, reflectively, without judgment\nEMPOWER — Support client autonomy and self-efficacy\nGUIDE — Collaboratively set goals and action steps\n\nKey principle: The client is the expert on their own life"],
+["ACE","Behavior Change","Transtheoretical Model — 5 Stages","1. PRE-CONTEMPLATION: Not thinking about change\n2. CONTEMPLATION: Considering change within 6 months\n3. PREPARATION: Planning, making small steps\n4. ACTION: Actively changing (0–6 months)\n5. MAINTENANCE: Sustained change >6 months\n\nStrategy tip: Match your intervention to the client's stage"],
+["ACE","Behavior Change","SMART Goals","Framework for effective goal-setting:\n\nS — Specific (clearly defined)\nM — Measurable (quantifiable, trackable)\nA — Attainable (realistic given resources)\nR — Relevant (meaningful to the client)\nT — Time-bound (has a deadline)\n\nEx: 'Walk 30 min, 4 days/week for the next 8 weeks' vs. the vague 'get more active'"],
+["ACE","Behavior Change","Stages of Learning","How clients acquire motor skills (Fitts & Posner):\n\n1. COGNITIVE — Understanding the movement; many errors; needs lots of cueing and demonstration\n2. ASSOCIATIVE — Practicing and refining; fewer errors; benefits from specific feedback\n3. AUTONOMOUS — Movement is automatic; performed without conscious thought; minimal cueing\n\nCue accordingly: more guidance early, more autonomy later"],
+["ACE","Behavior Change","Sources of Self-Efficacy","Bandura's 4 sources of confidence in one's ability to succeed:\n\n1. PAST PERFORMANCE (mastery) — strongest source; prior success builds confidence\n2. VICARIOUS EXPERIENCE — seeing similar others succeed\n3. VERBAL PERSUASION — encouragement from trainer\n4. PHYSIOLOGICAL STATE — how exercise feels (fatigue, energy)\n\nTrainers boost self-efficacy with achievable wins early"],
+["ACE","Exercise Science","VT1 — Ventilatory Threshold 1","≈ First lactate threshold\nCharacteristic: Ventilation increases disproportionately to VO2\nTalk test: Can still hold a conversation, but slightly labored\nIntensity: ~40–60% VO2max (untrained), higher in trained\n\nACE Phase 1 cardio = BELOW VT1\nACE Phase 2 cardio = AT and slightly ABOVE VT1"],
+["ACE","Exercise Science","VT2 — Ventilatory Threshold 2","≈ Second lactate threshold / anaerobic threshold / OBLA\nCharacteristic: Ventilation spikes sharply again, lactate accumulates faster than clearance\nTalk test: Can only speak a few words at a time\nIntensity: ~85–90% VO2max in trained athletes\n\nACE Phase 4 cardio = AT and ABOVE VT2"],
+["ACE","Exercise Science","1 MET (Metabolic Equivalent)","1 MET = 3.5 mL O₂ / kg / min = resting metabolic rate\n\nActivity classifications:\n• Light: 1.5–2.9 METs\n• Moderate: 3–5.9 METs\n• Vigorous: ≥6 METs\n\nExamples:\n• Walking 3 mph ≈ 3.5 METs\n• Running 6 mph ≈ 10 METs\n• Cycling (vigorous) ≈ 8–12 METs"],
+["ISSA","Periodization","Linear Periodization (Traditional)","Systematically ↑ intensity while ↓ volume over weeks/months:\n\nPhase 1 (Hypertrophy): High volume, low intensity\nPhase 2 (Strength): Moderate volume, moderate intensity\nPhase 3 (Power/Peak): Low volume, high intensity\n\nBest for: Beginners, athletes peaking for a competition\nLimitation: Can lead to staleness if used long-term"],
+["ISSA","Periodization","Daily Undulating Periodization (DUP)","Varies volume AND intensity across training days:\n\nEx: Mon = Strength (5×5, 85% 1RM)\n      Wed = Hypertrophy (4×10, 75% 1RM)\n      Fri = Endurance (3×15, 65% 1RM)\n\nBest for: Intermediate–advanced clients, avoiding plateau\nAdvantage: Frequent stimuli across multiple rep ranges"],
+["ISSA","Nutrition","Macronutrient Caloric Values","Protein: 4 cal/gram\nCarbohydrates: 4 cal/gram\nFat: 9 cal/gram\nAlcohol: 7 cal/gram (not a macronutrient)\n\nImplication: Fat is >2× as calorie-dense as carbs/protein. A 'moderate fat' diet can quickly become high-calorie if portions aren't monitored."],
+["ISSA","Nutrition","Protein Recommendations","Sedentary adults (RDA): 0.8 g/kg body weight\nActive adults: 1.2–1.7 g/kg\nStrength/hypertrophy athletes: 1.6–2.2 g/kg\nEndurance athletes: 1.2–1.6 g/kg\nBodybuilders (aggressive cut): up to 2.4–3.1 g/kg\n\nMaximum utilized per meal: ~20–40g\nTotal daily intake matters more than timing"],
+["ISSA","Nutrition","Carbohydrate Timing","Pre-workout (2–3h before): Complex carbs + protein, low fat\nPre-workout (30–60 min): Simple/moderate GI carbs only\nDuring (>60 min): 30–60g fast carbs/hour (gels, drinks)\nPost-workout window (0–2h): High-GI carbs + protein\nRationale: Glycogen synthesis peaks immediately post-exercise\nPost-workout ratio: 3–4:1 carb-to-protein"],
+["ISSA","Nutrition","Hydration Guidelines","Body is ~60% water. Dehydration of even 2% impairs performance.\n\nPre-exercise: 16–20 oz, 2–3 hours before\nDuring: 7–10 oz every 10–20 min\nPost-exercise: 16–24 oz per POUND of body weight lost\n\nMonitor: Urine color (pale yellow = hydrated; dark = dehydrated)\nElectrolytes (sodium) needed for sessions >60 min or heavy sweat"],
+["ISSA","Special Populations","Hypertension","High blood pressure (≥130/80 mmHg).\n\nGuidelines:\n• Medical clearance + monitor BP\n• AVOID Valsalva maneuver (breath-holding spikes BP)\n• Avoid heavy isometrics and overhead lifting\n• Emphasize rhythmic aerobic exercise (lowers resting BP)\n• Allow longer warm-up / cool-down\n• Caution with sudden position changes (orthostatic hypotension from meds)"],
+["ISSA","Special Populations","Diabetes","Type 1 (insulin-dependent) & Type 2 (insulin resistance).\n\nGuidelines:\n• Monitor blood glucose before/after exercise\n• Carry fast-acting carbs (juice, glucose tabs) for hypoglycemia\n• Avoid exercise if BG <100 (snack first) or very high\n• Inspect feet (neuropathy reduces sensation)\n• Exercise improves insulin sensitivity — a key intervention\n• Best to exercise at consistent times daily"],
+["ISSA","Special Populations","Youth & Older Adults","YOUTH: Resistance training is SAFE with proper supervision and form. Focus on technique, skill, fun, and bodyweight before heavy load. Avoid maximal lifts until skeletally mature.\n\nOLDER ADULTS (65+): Prioritize functional strength, balance, and fall prevention. Need longer recovery. Multi-modal program (resistance + cardio + balance + flexibility). Watch for medication effects on heart rate/BP."],
+["ALL","Anatomy","Biceps Brachii","Origin: Long head — supraglenoid tubercle of scapula; Short head — coracoid process\nInsertion: Radial tuberosity + bicipital aponeurosis\nActions: Elbow flexion, forearm supination, weak shoulder flexion\n\nAntagonist: Triceps brachii\nFun fact: It's a strong supinator — 'turning a screwdriver' muscle"],
+["ALL","Anatomy","Triceps Brachii","Origin: Long head — infraglenoid tubercle of scapula; Lateral & medial heads — posterior humerus\nInsertion: Olecranon process of the ulna\nAction: Elbow extension (long head also assists shoulder extension)\n\nAntagonist: Biceps brachii\nThe only muscle on the posterior arm — 3 heads"],
+["ALL","Anatomy","Pectoralis Major","Origin: Clavicle (clavicular head), sternum + costal cartilages (sternal head)\nInsertion: Greater tubercle / intertubercular groove of humerus\nActions: Shoulder horizontal adduction, internal rotation, adduction; clavicular head flexes shoulder\n\nTrained by: Bench press, push-ups, chest fly, dips"],
+["ALL","Anatomy","Latissimus Dorsi","Origin: Spinous processes T7–L5, thoracolumbar fascia, iliac crest, inferior ribs\nInsertion: Floor of intertubercular (bicipital) groove of humerus\nActions: Shoulder extension, adduction, internal rotation\n\nThe 'lat' — largest back muscle. Trained by: pull-ups, lat pulldowns, rows"],
+["ALL","Anatomy","Deltoid","Origin: Lateral clavicle, acromion, spine of scapula\nInsertion: Deltoid tuberosity of the humerus\nActions:\n• Anterior fibers — shoulder flexion + internal rotation\n• Middle fibers — shoulder abduction\n• Posterior fibers — shoulder extension + external rotation\n\nA 3-headed shoulder muscle"],
+["ALL","Anatomy","Rotator Cuff (SITS)","4 muscles that stabilize the glenohumeral joint:\n\nS — Supraspinatus: initiates abduction (first 15°)\nI — Infraspinatus: external rotation\nT — Teres minor: external rotation\nS — Subscapularis: internal rotation\n\nMnemonic: SITS. Most common injury site for the shoulder — keep these strong + mobile"],
+["ALL","Anatomy","Gluteus Maximus & Medius","GLUTEUS MAXIMUS\nOrigin: Posterior ilium, sacrum, coccyx | Insertion: Gluteal tuberosity of femur + IT band\nActions: Hip extension, external rotation\n\nGLUTEUS MEDIUS\nOrigin: Outer surface of ilium | Insertion: Greater trochanter\nActions: Hip abduction, pelvic stabilization (key in single-leg stance, prevents knee valgus)"],
+["ALL","Anatomy","Quadriceps & Hamstrings","QUADRICEPS (4 muscles: rectus femoris, 3 vasti)\nInsertion: Tibial tuberosity (via patellar tendon)\nAction: Knee extension; rectus femoris also flexes hip\n\nHAMSTRINGS (biceps femoris, semitendinosus, semimembranosus)\nOrigin: Ischial tuberosity\nInsertion: Tibia & fibula\nActions: Knee flexion, hip extension"],
+["ALL","Anatomy","Gastrocnemius & Soleus","GASTROCNEMIUS\nOrigin: Posterior femoral condyles (crosses knee + ankle)\nAction: Plantarflexion + knee flexion\nBest stretched/trained with knee STRAIGHT\n\nSOLEUS\nOrigin: Posterior tibia/fibula (crosses ankle only)\nAction: Plantarflexion regardless of knee position\nBoth insert on the calcaneus via the Achilles tendon"],
+["ALL","Anatomy","Synovial Joint Types","6 types of freely-movable joints:\n\n• HINGE — flexion/extension only (elbow, knee)\n• BALL-AND-SOCKET — all planes (hip, shoulder)\n• PIVOT — rotation (atlantoaxial neck, radioulnar)\n• GLIDING/PLANE — sliding (carpals, tarsals)\n• SADDLE — biaxial (thumb carpometacarpal)\n• CONDYLOID/ELLIPSOID — biaxial, no rotation (wrist)"],
+["ALL","Biomechanics","Lever Systems","3 classes (Fulcrum, Force, Resistance arrangement):\n\n1st CLASS — Fulcrum in MIDDLE (neck extension, seesaw)\n2nd CLASS — Resistance in middle; mechanical advantage (calf raise, wheelbarrow)\n3rd CLASS — Force in middle; most common in body; favors speed/ROM over force (bicep curl)\n\nMnemonic: 1-2-3 = F-R-E in the middle (Fulcrum, Resistance, Effort)"],
+["ALL","Flexibility","Static Stretching","Holding a stretch at end range of motion for 15–30 sec (up to 60).\n\nMechanism: Autogenic inhibition (GTO relaxes the stretched muscle)\nBest for: Overactive/tight muscles, post-workout, cool-down\nCaution: Avoid intense static stretching immediately BEFORE explosive activity (may temporarily reduce power output)"],
+["ALL","Flexibility","Dynamic Stretching","Active movement through a full range of motion (e.g., leg swings, walking lunges, arm circles).\n\nMechanism: Reciprocal inhibition + raises tissue temperature\nBest for: Warm-ups, pre-activity preparation\nAdvantage: Prepares the body for movement without the power deficit of static stretching"],
+["ALL","Flexibility","PNF Stretching","Proprioceptive Neuromuscular Facilitation — the most effective method for ROM gains.\n\nTechniques: Contract-relax, hold-relax, contract-relax-antagonist-contract (CRAC)\nProcess: Stretch → isometric contraction (~6 sec) → relax → deeper stretch\nMechanism: Combines autogenic + reciprocal inhibition\nUsually needs a partner"],
+["ALL","Flexibility","SMR & Reciprocal Inhibition","SELF-MYOFASCIAL RELEASE (foam rolling): Apply sustained pressure to a tender point ~30 sec. Uses autogenic inhibition (GTO) to release overactive muscle tone. Step 1 of the corrective continuum.\n\nRECIPROCAL INHIBITION: When the agonist contracts, the antagonist must relax. Ex: contracting the quad reflexively relaxes the hamstring — basis of dynamic stretching."],
+["ALL","Cardio","Max Heart Rate Formulas","Used to set HR-based intensity zones:\n\nFox formula (simple): 220 − age\nTanaka formula (more accurate): 208 − (0.7 × age)\n\nEx for a 40-year-old:\n• Fox: 220 − 40 = 180 bpm\n• Tanaka: 208 − 28 = 180 bpm\n\nNote: These are estimates — actual MHR varies ±10–12 bpm between individuals"],
+["ALL","Cardio","Karvonen (Heart Rate Reserve)","More accurate than %MHR because it accounts for resting fitness:\n\nHRR = HRmax − HRrest\nTarget HR = (HRR × intensity%) + HRrest\n\nEx: 30yo, HRmax 190, HRrest 60, 70% intensity\n= ((190 − 60) × 0.70) + 60\n= (130 × 0.70) + 60 = 91 + 60 = 151 bpm"],
+["ALL","Cardio","HIIT Protocols","High-Intensity Interval Training: alternating hard efforts with recovery.\n\nWork:rest ratios:\n• 1:1 — moderate (e.g., 30s on / 30s off)\n• 1:2 — favors recovery, higher intensity efforts\n• 1:3 to 1:5 — near-maximal sprints (ATP-PC focus)\n\nBenefits: High EPOC, time-efficient, improves VO2max\nTabata: 20s max effort / 10s rest × 8 rounds (4 min)"],
+["ALL","Program Design","Rest Periods by Goal","Match rest to the training adaptation:\n\n• Muscular Endurance: 0–90 sec (short — metabolic stress)\n• Hypertrophy: 30–90 sec (moderate — balances tension + fatigue)\n• Maximal Strength: 2–5 min (long — full ATP-PC recovery)\n• Power: 3–5 min (long — quality of explosive reps)\n\nKey: Heavier load + lower reps = longer rest needed"],
+["ALL","Program Design","DOMS","Delayed Onset Muscle Soreness:\n\n• Onset: 24–72 hours after unfamiliar/intense exercise\n• Cause: Microscopic muscle fiber damage + inflammation\n• Trigger: Especially ECCENTRIC contractions and novel exercises\n• NOT caused by lactic acid (a common myth — lactate clears within ~1 hour)\n• Management: Light activity, hydration, gradual progression\n• Repeated-bout effect: soreness diminishes as the body adapts"],
+["ALL","Program Design","Reversibility & Detraining","'Use it or lose it' principle:\n\n• Fitness adaptations are LOST when training stops or load drops too far\n• Cardiovascular fitness declines fastest (within ~2 weeks of inactivity)\n• Strength is retained longer than endurance\n• VO2max can drop significantly within a few weeks\n\nImplication: Maintenance training preserves gains; total rest reverses them. Plan to keep clients consistent."],
+["ALL","Energy Systems","ATP-PC (Phosphocreatine) System","Duration: 0–10 seconds | Type: Anaerobic\nSubstrate: Creatine phosphate\nATP yield: ~1 ATP per creatine phosphate\nRate: FASTEST energy production\nRecovery: ~2–3 min for full replenishment\n\nExamples: 100m sprint, max squat, box jump, shot put\nTraining application: Short max efforts with full rest (HIIT, plyos)"],
+["ALL","Energy Systems","Glycolytic System","Duration: 10 sec – 2 min | Type: Anaerobic\nSubstrate: Glucose → pyruvate (fast) or lactate (rapid)\nByproduct: Lactate + H⁺ ions (burn sensation)\nFast glycolysis: Very high power, 10–30 sec\nSlow glycolysis: Lower power, up to 2 min\n\nExamples: 400m run, 90-sec AMRAP, sprint intervals\nRecovery: 30–90 minutes"],
+["ALL","Energy Systems","Oxidative (Aerobic) System","Duration: 2+ minutes | Type: Aerobic\nSubstrate: Fat (primary at rest), carbs (high intensity), protein (minimal)\nATP yield: ~36–38 ATP per glucose molecule\nRate: SLOWEST but most efficient\n\nExamples: Marathon, long cycling, extended swimming\nFat oxidation requires more O₂ per ATP than carbohydrates"],
+["ALL","Muscle Fibers","Type I — Slow Twitch","Color: Red (high myoglobin + capillary density)\nFatigue resistance: Very HIGH\nForce production: LOW\nMitochondria: Many (aerobic metabolism)\nBest for: Endurance, postural stability, fat oxidation\n\nExample muscles: Soleus, erector spinae, diaphragm\nBest trained with: High reps, minimal rest, sustained effort"],
+["ALL","Muscle Fibers","Type IIa — Fast Twitch Oxidative","Color: Pink (intermediate characteristics)\nFatigue resistance: MODERATE\nForce production: MODERATE–HIGH\nAdaptable: Can shift toward Type I or IIx with training\n\nBest trained with: Strength endurance (8–12 reps)\nNote: Most limb muscles contain a mix of IIa and I fibers"],
+["ALL","Muscle Fibers","Type IIx — Fast Twitch Glycolytic","Color: White (low myoglobin)\nFatigue resistance: LOW — fatigues quickly\nForce production: HIGHEST and most explosive\nMitochondria: Few\n\nBest for: Power, explosive movements, sprinting\nBest trained with: Heavy loads (1–5 reps), plyometrics, maximal sprints\nExample: Gastrocnemius (lateral head)"],
+["ALL","Anatomy","Planes of Motion","SAGITTAL — divides L/R: flexion, extension, hyperextension, dorsi/plantarflexion\nEx: Squat, bicep curl, running\n\nFRONTAL (Coronal) — divides front/back: abduction, adduction, lateral flexion, eversion/inversion\nEx: Lateral raise, side lunge, lateral shuffle\n\nTRANSVERSE — divides top/bottom: internal/external rotation, pronation, supination, horizontal ABD/ADD\nEx: Cable rotation, golf swing, Russian twist"],
+["ALL","Anatomy","Muscle Actions","CONCENTRIC: Muscle shortens under tension (lifting/positive phase)\nECCENTRIC: Muscle lengthens under tension (lowering/negative phase) — produces the MOST FORCE; greatest DOMS potential\nISOTONIC: Muscle changes length (concentric or eccentric)\nISOMETRIC: Muscle contracts with no length change; no joint movement\nEx: Plank, wall sit\n\nNote: 'Negative training' = eccentric-focused, e.g., slow lowering"],
+["ALL","Anatomy","Muscle Roles","AGONIST (Prime Mover): Muscle directly responsible for the movement\nANTAGONIST: Opposes the prime mover (must relax for movement to occur)\nSYNERGIST: Assists the prime mover\nSTABILIZER: Reduces unwanted motion at adjacent joints\nNEUTRALIZER: Cancels an unwanted secondary action of the agonist\n\nEx in bicep curl: Biceps=agonist, Triceps=antagonist, Brachialis=synergist"],
+["ALL","Assessment","PAR-Q & PARQ+","PAR-Q: 7-question pre-participation screening\nAny 'Yes' → refer to physician before exercise\n\nKey questions: chest pain, dizziness, diagnosed heart condition, bone/joint problems, blood pressure medications, balance issues\n\nPAR-Q+: More comprehensive, includes additional health history\nUsed for: More detailed risk stratification\nLimitation of PAR-Q: Not sensitive enough for high-risk populations"],
+["ALL","Training Principles","FITT Principle","FREQUENCY — how often (days/week)\nINTENSITY — how hard (% 1RM, RPE, HR zone, MET)\nTIME — duration (sets × reps, or minutes)\nTYPE — exercise modality (resistance, cardio, flexibility, neuromotor)\n\nAll 4 variables must be manipulated for progressive overload\nCommon mistake: Only increasing intensity, ignoring volume/frequency"],
+["ALL","Training Principles","Progressive Overload","Principle: Gradually increase training stress over time to continue adaptation\n\nMethods:\n↑ Load (weight)\n↑ Volume (sets × reps)\n↑ Frequency (more sessions)\n↓ Rest periods\n↑ Range of motion\n↑ Exercise complexity / instability\n\nOverload without recovery = overtraining\nDeload weeks (reduced volume) are necessary every 4–8 weeks"],
+["ALL","Training Principles","EPOC","Excess Post-Exercise Oxygen Consumption:\n\nThe elevated oxygen consumption after exercise as the body returns to homeostasis\nCauses: Resynthesizing ATP-PC, clearing lactate, hormone normalization, temperature regulation\nDuration: Minutes to hours depending on intensity\nHigher EPOC with: High-intensity intervals, heavy resistance training vs. steady-state\nCaloric contribution: 5–15% additional calories post-workout"],
+["ALL","Training Principles","Periodization Cycles","MACROCYCLE — the entire training plan (often 6–12 months, e.g., a full season)\nMESOCYCLE — a training block focused on one goal (weeks to a few months, e.g., a hypertrophy block)\nMICROCYCLE — the smallest unit, usually 1 week of training\n\nAnalogy: Macro = book, Meso = chapter, Micro = page\nProper structuring manages fatigue and peaks performance"],
+];
+
+const Q=[
+["NASM","Which phase of the NASM OPT Model uses 12–20 reps, a 4-2-1 tempo, and unstable training environments?",["Phase 2 — Strength Endurance","Phase 4 — Maximal Strength","Phase 1 — Stabilization Endurance","Phase 3 — Hypertrophy"],2,"Phase 1 (Stabilization Endurance) uses high reps (12–20), low load (50–70% 1RM), slow tempo (4-2-1), and unstable surfaces. The goal is neuromuscular control and joint stability before adding significant load."],
+["NASM","Knees caving inward during the overhead squat indicates which muscles are OVERACTIVE?",["Gluteus medius and VMO","Adductor complex, TFL, and biceps femoris (short head)","Tibialis anterior and posterior","Medial hamstrings and gracilis"],1,"Knee valgus = overactive adductor complex, TFL, and lateral hamstring. Underactive: gluteus medius, gluteus maximus, VMO, and tibialis anterior. Linked to increased ACL injury risk."],
+["NASM","Which structure triggers AUTOGENIC INHIBITION, causing a muscle to relax?",["Muscle spindle","Ruffini endings","Golgi Tendon Organ (GTO)","Pacinian corpuscle"],2,"The GTO detects excessive muscle tension and triggers autogenic inhibition — relaxing the same muscle. Foam rolling and static stretching exploit this mechanism."],
+["NASM","What is the correct order of the NASM Corrective Exercise Continuum?",["Activate → Integrate → Inhibit → Lengthen","Inhibit → Lengthen → Activate → Integrate","Lengthen → Activate → Inhibit → Integrate","Integrate → Activate → Lengthen → Inhibit"],1,"The continuum is Inhibit (SMR) → Lengthen (static stretch) → Activate (isolated strengthening) → Integrate (integrated dynamic movement). Address overactive muscles first, then strengthen underactive ones, then integrate."],
+["NASM","Phase 5 of the OPT Model (Power) uses what loading intensity?",["85–100% 1RM","75–85% 1RM","50–70% 1RM","30–45% 1RM for speed"],3,"Power training uses lighter loads (30–45% 1RM) moved as FAST as possible to maximize rate of force development. Often supersetted with a heavy strength exercise."],
+["NASM","Which technique activates the deep local core stabilizers (transverse abdominis)?",["Bracing","The Valsalva maneuver","The drawing-in maneuver","Posterior pelvic tilt"],2,"The drawing-in maneuver (pulling the navel toward the spine) recruits the transverse abdominis and multifidus. Bracing co-contracts the whole abdominal wall and is used for heavy lifts."],
+["NASM","GAS (General Adaptation Syndrome) was developed by which researcher?",["Tudor Bompa","Yuri Verkhoshansky","Hans Selye","Vladimir Zatsiorsky"],2,"Hans Selye developed GAS with 3 stages: Alarm, Resistance, Exhaustion. Progressive overload exploits stages 1–2 without reaching exhaustion."],
+["ACE","The ACE IFT Model Phase 2 focuses primarily on:",["Maximal strength and peak power","Sport-specific performance","Fundamental movement pattern competency","Joint stability in isolation"],2,"ACE IFT Phase 2 develops functional movement patterns — squat, hinge, push, pull, rotate — progressing from bodyweight to loaded, and bilateral to unilateral."],
+["ACE","A client who has been exercising consistently for 8 months is in which TTM stage?",["Action","Pre-contemplation","Maintenance","Contemplation"],2,"Maintenance = sustained behavior change for >6 months. At 8 months, this client is in Maintenance — focus on relapse prevention and long-term autonomy."],
+["ACE","What does the 'A' in a SMART goal stand for?",["Aggressive","Attainable","Aerobic","Assessed"],1,"SMART = Specific, Measurable, Attainable, Relevant, Time-bound. Attainable means the goal is realistic given the client's current resources and abilities."],
+["ACE","One MET is defined as:",["7.0 mL/kg/min","5.0 mL/kg/min","3.5 mL/kg/min","1.0 mL/kg/min"],2,"1 MET = 3.5 mL of O₂/kg/min, representing resting metabolic rate. METs classify intensity: light <3, moderate 3–6, vigorous >6."],
+["ACE","According to Bandura, the STRONGEST source of self-efficacy is:",["Verbal persuasion","Vicarious experience","Past performance (mastery)","Physiological state"],2,"Past performance (mastery experience) is the strongest source of self-efficacy. This is why trainers build achievable early wins to boost a client's confidence."],
+["ACE","In which stage of learning does a client perform a movement automatically with minimal cueing?",["Cognitive","Associative","Autonomous","Reflexive"],2,"The autonomous stage is when a skill becomes automatic and requires little conscious thought. Cognitive = early/error-prone; Associative = refining with practice."],
+["ISSA","Daily Undulating Periodization (DUP) is best characterized by:",["Increasing intensity linearly over months","Maintaining constant intensity throughout","Varying volume and intensity within a training week","Using only machine-based exercises"],2,"DUP varies stimuli frequently — different rep schemes on different days. Provides multiple adaptations with less monotony and fewer plateaus."],
+["ISSA","The recommended protein intake for strength/hypertrophy athletes is:",["0.4–0.6 g/kg","0.8 g/kg (RDA for sedentary)","1.6–2.2 g/kg","3.5–4.0 g/kg"],2,"Strength athletes need 1.6–2.2 g/kg for optimal muscle protein synthesis. The general RDA (0.8 g/kg) is inadequate for active populations."],
+["ISSA","How many calories per gram does fat provide?",["4 cal/g","7 cal/g","9 cal/g","11 cal/g"],2,"Fat = 9 cal/g — more than double protein or carbohydrates (both 4 cal/g). This is why fatty foods are calorie-dense in small portions."],
+["ISSA","Which is a key guideline when training a client with hypertension?",["Encourage heavy isometric holds","Avoid the Valsalva maneuver (breath-holding)","Prioritize maximal overhead lifting","Skip the warm-up to save time"],1,"Clients with hypertension should avoid the Valsalva maneuver, which sharply spikes blood pressure. Emphasize rhythmic aerobic exercise and longer warm-ups/cool-downs."],
+["ISSA","For a client with diabetes, the trainer should always:",["Restrict all carbohydrates before exercise","Have fast-acting carbohydrates available for hypoglycemia","Avoid all aerobic exercise","Recommend exercising only when fasted"],1,"Always have fast-acting carbs (juice, glucose tabs) on hand to treat hypoglycemia. Monitor blood glucose before/after exercise and inspect feet due to potential neuropathy."],
+["ALL","Which plane of motion do bicep curls and squats primarily occur in?",["Frontal","Transverse","Sagittal","Oblique"],2,"Sagittal plane divides the body left/right and involves flexion/extension. Bicep curls and squats are both sagittal plane movements."],
+["ALL","Which energy system is the PRIMARY source during a maximal 8-second effort?",["Glycolytic system","Oxidative (aerobic) system","Phosphocreatine (ATP-PC) system","Beta-oxidation"],2,"The ATP-PC system provides immediate energy for 0–10 second maximal efforts using stored creatine phosphate. No oxygen required; recovery ~2–3 minutes."],
+["ALL","Eccentric muscle contractions are characterized by:",["Muscle shortening against resistance","Muscle contracting with no length change","Muscle lengthening under tension","Muscle producing no force"],2,"Eccentric = muscle LENGTHENS under tension (lowering phase). Eccentric contractions produce the greatest force and are the primary cause of DOMS."],
+["ALL","Which muscle initiates the first 15 degrees of shoulder abduction?",["Deltoid","Supraspinatus","Pectoralis major","Trapezius"],1,"The supraspinatus (a rotator cuff muscle) initiates abduction for the first ~15°, after which the deltoid takes over. SITS = Supraspinatus, Infraspinatus, Teres minor, Subscapularis."],
+["ALL","DOMS (delayed onset muscle soreness) is primarily caused by:",["Lactic acid buildup in the muscle","Microscopic muscle fiber damage and inflammation","Dehydration during exercise","Insufficient protein intake"],1,"DOMS results from microscopic muscle fiber damage and inflammation, peaking 24–72 hours post-exercise. The 'lactic acid' explanation is a myth — lactate clears within about an hour."],
+["ALL","A calf raise is an example of which lever class?",["1st class","2nd class","3rd class","4th class"],1,"A calf raise is a 2nd class lever — the resistance (body weight) sits between the fulcrum (ball of foot) and the force (calf via Achilles). 2nd class levers provide a mechanical advantage."],
+["ALL","Which stretching method is generally considered most effective for increasing range of motion?",["Ballistic stretching","Static stretching","PNF (Proprioceptive Neuromuscular Facilitation)","Passive bouncing"],2,"PNF stretching (contract-relax / hold-relax) is the most effective for ROM gains because it combines autogenic and reciprocal inhibition. It typically requires a partner."],
+["ALL","Using the Karvonen formula, what is the target HR for a client at 70% intensity with HRmax 190 and HRrest 60?",["133 bpm","151 bpm","160 bpm","91 bpm"],1,"Target HR = ((190 − 60) × 0.70) + 60 = (130 × 0.70) + 60 = 91 + 60 = 151 bpm. Karvonen uses heart rate reserve for greater accuracy than %MHR."],
+["ALL","Which rest period best matches a maximal strength training goal?",["0–30 seconds","30–90 seconds","2–5 minutes","No rest needed"],2,"Maximal strength training uses 2–5 minutes of rest to allow full ATP-PC system recovery, enabling high-quality heavy lifts. Endurance/hypertrophy use shorter rest."],
+];
+
+const T={
+nasm:[
+["OPT Model — All 5 Phases","The NASM OPT Model is a periodized, evidence-based progression system:\n\nSTABILIZATION LEVEL\nPhase 1: Stabilization Endurance — 12–20 reps, 50–70% 1RM, 4-2-1 tempo, unstable\n\nSTRENGTH LEVEL\nPhase 2: Strength Endurance — 8–12 reps, 70–80% 1RM, superset format\nPhase 3: Hypertrophy — 6–12 reps, 75–85% 1RM, high volume\nPhase 4: Maximal Strength — 1–5 reps, 85–100% 1RM, 3–5 min rest\n\nPOWER LEVEL\nPhase 5: Power — 1–10 reps, 30–45% 1RM (speed), superset with plyometric\n\nProgression: Not strictly linear — clients cycle back through phases based on goals. Most general fitness clients focus on Phases 1–3."],
+["Corrective Exercise Continuum","NASM's 4-step process to fix muscle imbalances:\n\n1. INHIBIT — Self-myofascial release (foam rolling) on overactive muscles, hold tender spots ~30 sec\n2. LENGTHEN — Static stretch those same overactive/tight muscles (autogenic inhibition)\n3. ACTIVATE — Isolated strengthening of the underactive muscles\n4. INTEGRATE — Integrated dynamic movement that retrains the whole kinetic chain\n\nALWAYS address overactive muscles (inhibit + lengthen) BEFORE strengthening underactive ones."],
+["Assessment: Overhead Squat (OHSA)","NASM's primary dynamic postural assessment. Check 5 points:\n• Feet turn out → overactive: soleus, lateral gastroc | underactive: medial gastroc, tibialis\n• Knees cave in (valgus) → overactive: adductors, TFL | underactive: glutes, VMO\n• Low back arches → overactive: hip flexors, erectors | underactive: glutes, core\n• Excessive forward lean → overactive: soleus, hip flexors | underactive: tibialis, glutes\n• Arms fall forward → overactive: lats, pec minor | underactive: mid/lower trap"],
+["Muscle Imbalance Syndromes","UPPER CROSSED SYNDROME\nOveractive: Upper trap, SCM, levator scapulae, pectorals\nUnderative: Deep cervical flexors, mid/lower trapezius, serratus anterior, rhomboids\nResult: Forward head posture, rounded shoulders\n\nLOWER CROSSED SYNDROME\nOveractive: Hip flexors, erector spinae, TFL\nUnderative: Gluteus maximus/medius, intrinsic core, hamstrings\nResult: Anterior pelvic tilt, lumbar lordosis, inhibited glutes"],
+],
+ace:[
+["IFT Model — Cardiorespiratory","ACE uses ventilatory thresholds (not %HRmax) for cardio intensity:\n\nPHASE 1 — Aerobic Base (below VT1): full conversation; aerobic fat metabolism. Who: deconditioned\nPHASE 2 — Aerobic Efficiency (near VT1): slightly labored; improving lactate threshold\nPHASE 3 — Anaerobic Endurance (VT1 to VT2): significant breathlessness; pushing threshold higher\nPHASE 4 — Anaerobic Power (at/above VT2): 1–2 words only; supramaximal intervals for athletes"],
+["Behavior Change & Coaching","TRANSTHEORETICAL MODEL (5 stages)\nPre-contemplation → Contemplation → Preparation → Action → Maintenance\nMatch your strategy to the client's stage.\n\nACE MOVER METHOD (motivational interviewing)\nAsk → Listen → Empower → Guide\n\nSMART GOALS: Specific, Measurable, Attainable, Relevant, Time-bound\n\nABC APPROACH: Antecedents → Behaviors → Consequences (modify A and C to change B)\n\nSELF-EFFICACY sources: past performance (strongest), vicarious experience, verbal persuasion, physiological state"],
+["Stages of Learning","How clients acquire motor skills (Fitts & Posner):\n\n1. COGNITIVE — Learning what to do; frequent errors; needs demonstrations and lots of cueing\n2. ASSOCIATIVE — Practicing and refining; fewer errors; benefits from specific corrective feedback\n3. AUTONOMOUS — Skill is automatic; performed without conscious thought; minimal cueing needed\n\nCoaching tip: Heavy guidance early, progressively more autonomy as skill develops."],
+["Functional Movement Framework","ACE IFT Phase 2 teaches movement before loading:\n\n5 FUNDAMENTAL PATTERNS:\n1. Squat — knee dominant\n2. Hinge — hip dominant (deadlift)\n3. Push — horizontal + vertical\n4. Pull — horizontal + vertical\n5. Rotation/Core — transverse plane\n\nLOADING HIERARCHY:\nBodyweight → External load\nBilateral → Unilateral\nStable → Unstable\nSimple → Complex"],
+],
+issa:[
+["Periodization Systems","LINEAR (Traditional): Volume ↓ while Intensity ↑ over time. Best for beginners and competition peaking.\n\nUNDULATING (DUP): Varies volume AND intensity within a week (Mon strength, Wed hypertrophy, Fri endurance). Best for intermediate–advanced.\n\nBLOCK: Distinct focused blocks (Accumulation → Transmutation → Realization). For elite athletes.\n\nCYCLES: Macrocycle (whole plan) → Mesocycle (block, weeks–months) → Microcycle (one week)"],
+["Sports Nutrition","MACROS: Protein 4 cal/g | Carbs 4 cal/g | Fat 9 cal/g\n\nPROTEIN: Sedentary 0.8 g/kg | Active 1.2–1.7 | Strength 1.6–2.2 g/kg\n\nCARB TIMING: Pre (2–3h) complex carbs + protein | Post (0–2h) 3–4:1 carb:protein for glycogen\n\nHYDRATION: Pre 16–20 oz | During 7–10 oz per 10–20 min | Post 16–24 oz per lb lost\n\nEVIDENCE-BASED SUPPLEMENTS: Creatine, caffeine, beta-alanine, protein"],
+["Special Populations","HYPERTENSION: Avoid Valsalva + heavy isometrics; emphasize rhythmic aerobic; monitor BP; longer warm-up.\n\nDIABETES: Monitor blood glucose; carry fast carbs; inspect feet; exercise improves insulin sensitivity.\n\nPREGNANCY: Avoid supine after 1st trimester; RPE 12–14; avoid overheating and breath-holding.\n\nOLDER ADULTS: Functional strength + balance + fall prevention; longer recovery; multi-modal.\n\nYOUTH: Resistance training safe with supervision; technique + fun over heavy load."],
+],
+common:[
+["Energy Systems — Full Reference","ATP-PC (PHOSPHOCREATINE): 0–10 sec | Anaerobic | Creatine phosphate | Fastest rate | Recovery ~2–3 min. Ex: sprint, max lift, jump\n\nGLYCOLYTIC: 10 sec–2 min | Anaerobic | Glucose | Byproduct: lactate + H⁺ (burn). Ex: 400m, sprint intervals\n\nOXIDATIVE: 2+ min | Aerobic | Fat (low intensity), carbs (high) | 36–38 ATP/glucose | Slowest, most efficient. Ex: marathon, cycling\n\nNote: All systems work simultaneously; dominance shifts with intensity and duration."],
+["Muscle Anatomy — Key Muscles","BICEPS: O—scapula (coracoid/supraglenoid) | I—radial tuberosity | A—elbow flexion + supination\nTRICEPS: O—scapula/humerus | I—olecranon | A—elbow extension\nPEC MAJOR: A—horizontal adduction, internal rotation\nLATS: A—shoulder extension, adduction, internal rotation\nDELTOID: anterior=flexion, mid=abduction, posterior=extension\nGLUTE MAX: A—hip extension + external rotation\nGLUTE MED: A—hip abduction + pelvic stabilization\nQUADS: A—knee extension | HAMSTRINGS: A—knee flexion + hip extension\nGASTROC: plantarflexion + knee flexion | SOLEUS: plantarflexion only"],
+["Flexibility & Lever Systems","STRETCHING TYPES:\n• Static — hold 15–30 sec; autogenic inhibition; post-workout\n• Dynamic — active ROM; warm-ups; reciprocal inhibition\n• PNF — contract-relax; most effective for ROM; needs partner\n• SMR (foam roll) — pressure on trigger points 30 sec; step 1 of corrective continuum\n\nLEVER SYSTEMS:\n• 1st class — fulcrum in middle (neck, seesaw)\n• 2nd class — resistance in middle; mechanical advantage (calf raise)\n• 3rd class — force in middle; most common in body (bicep curl)"],
+["Key Formulas & Values","MAX HEART RATE: 220 − age (Fox) | 208 − (0.7 × age) (Tanaka)\n\nKARVONEN HRR: Target HR = ((HRmax − HRrest) × intensity%) + HRrest\n\nBMI: Weight (kg) ÷ Height (m)²\n• Underweight <18.5 | Normal 18.5–24.9 | Overweight 25–29.9 | Obese ≥30\n\nVOLUME LOAD: Sets × Reps × Load\nRPE: Borg 6–20 (×10 ≈ HR) | Modified 0–10\n1RM (Brzycki): Load ÷ (1.0278 − 0.0278 × reps)\n\nCALORIES: Protein 4 | Carbs 4 | Fat 9 | Alcohol 7 cal/g | 1 MET = 3.5 mL O₂/kg/min"],
+]
+};
+
+let S={tab:'home',cert:'ALL',tcert:'nasm',ci:0,flipped:false,qs:false,qc:'ALL',qq:[],qi:0,qsel:null,qsc:0,qa:[],qd:false};
+function bcls(c){return 'badge b'+(c==='ALL'?'ALL':c)}
+function certColor(c){return{NASM:'#185FA5',ACE:'#BA7517',ISSA:'#534AB7',ALL:'#1D9E75'}[c]||'#888'}
+function filteredCards(){return S.cert==='ALL'?FC:FC.filter(f=>f[0]===S.cert||f[0]==='ALL')}
+function filteredQ(){return S.qc==='ALL'?Q:Q.filter(q=>q[0]===S.qc||q[0]==='ALL')}
+function shuffle(arr){let a=[...arr];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function renderHome(){
+  const nc=FC.filter(f=>f[0]==='NASM').length,ac=FC.filter(f=>f[0]==='ACE').length,ic=FC.filter(f=>f[0]==='ISSA').length;
+  const nq=Q.filter(q=>q[0]==='NASM').length,aq=Q.filter(q=>q[0]==='ACE').length,iq=Q.filter(q=>q[0]==='ISSA').length;
+  const topics=[['Energy systems','ALL'],['OPT Model phases','NASM'],['Corrective exercise continuum','NASM'],['ACE IFT Model','ACE'],['Stages of learning','ACE'],['Periodization systems','ISSA'],['Special populations','ISSA'],['Muscle anatomy','ALL'],['Flexibility & levers','ALL']];
+  return `<h2 class="sh">All-in-one cert reviewer</h2>
+<p style="color:var(--color-text-secondary);margin-bottom:20px;line-height:1.7">Comprehensive flashcards, practice quiz, and reference guides for ACE, NASM, and ISSA certifications — condensed and designed for efficient studying.</p>
+<div class="g3">
+${[['NASM','#185FA5','OPT Model · CES · Assessment · Plyometrics',nc,nq],['ACE','#BA7517','IFT Model · Behavior Change · VT Thresholds',ac,aq],['ISSA','#534AB7','Periodization · Nutrition · Special Populations',ic,iq]].map(([c,col,d,cards,qs])=>`
+<div class="card" style="border-color:${col}33;cursor:pointer" data-goto-cert="${c}">
+  <div style="font-family:'Oswald',sans-serif;font-size:20px;font-weight:500;color:${col};margin-bottom:6px">${c}</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px;line-height:1.6">${d}</div>
+  <div style="display:flex;gap:12px">
+    <span style="font-size:11px;color:var(--color-text-secondary)"><i class="ti ti-cards" aria-hidden="true"></i> ${cards} cards</span>
+    <span style="font-size:11px;color:var(--color-text-secondary)"><i class="ti ti-help-circle" aria-hidden="true"></i> ${qs} questions</span>
+  </div>
+</div>`).join('')}
+</div>
+<div class="g3" style="margin-bottom:20px">
+${[['Total flashcards',FC.length,'#185FA5'],['Practice questions',Q.length,'#BA7517'],['Topic guides',16,'#534AB7'],['Certs covered',3,'#1D9E75']].map(([l,v,c])=>`
+<div class="scard"><div class="snum" style="color:${c}">${v}</div><div class="slabel">${l}</div></div>`).join('')}
+</div>
+<h2 class="sh" style="font-size:16px">Quick-access topics</h2>
+<div class="g2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+${topics.map(([label,cert])=>`
+<div class="card" style="cursor:pointer;padding:12px 14px" data-goto-topic="${cert}">
+  <span class="${bcls(cert)}" style="font-size:10px;padding:2px 7px">${cert}</span>
+  <div style="font-size:13px;font-weight:500;margin-top:6px">${label}</div>
+</div>`).join('')}
+</div>`;
+}
+
+function renderTopics(){
+  const certs=[['nasm','NASM','#185FA5'],['ace','ACE','#BA7517'],['issa','ISSA','#534AB7'],['common','Common','#1D9E75']];
+  const sections=T[S.tcert]||[];
+  const col=certs.find(c=>c[0]===S.tcert);
+  return `<h2 class="sh">Study topics</h2>
+<div class="cert-tab-row">
+${certs.map(([k,label,c])=>`<button class="ctab ${S.tcert===k?'on':''}" data-tcert="${k}" style="${S.tcert===k?'border-color:'+c+';color:'+c:''}">${label}</button>`).join('')}
+</div>
+${sections.map(([title,content])=>`
+<div class="card" style="margin-bottom:12px;border-left:3px solid ${col?col[2]:'var(--color-border-secondary)'};border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0">
+  <h3 style="font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;letter-spacing:.3px;margin-bottom:4px">${title}</h3>
+  <div class="tcont">${content}</div>
+</div>`).join('')}`;
+}
+
+function renderCards(){
+  const cards=filteredCards();
+  if(!cards.length) return '<p style="color:var(--color-text-secondary)">No cards for this filter.</p>';
+  const idx=Math.min(S.ci,cards.length-1);
+  const card=cards[idx];
+  const pct=Math.round((idx+1)/cards.length*100);
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+  <h2 class="sh" style="margin:0">Flashcards</h2>
+  <span style="font-size:12px;color:var(--color-text-secondary)">${idx+1} / ${cards.length}</span>
+</div>
+<div class="prog"><div class="progf" style="width:${pct}%;background:${certColor(card[0])}"></div></div>
+<div class="flip-wrap" id="fc">
+  <div class="flip-inner${S.flipped?' flipped':''}">
+    <div class="flip-face">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="${bcls(card[0])}">${card[0]}</span>
+        <span style="font-size:11px;color:var(--color-text-secondary)">${card[1]}</span>
+      </div>
+      <div style="text-align:center;padding:0 8px">
+        <div style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:500;line-height:1.4;letter-spacing:.2px">${card[2]}</div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--color-text-secondary)"><i class="ti ti-rotate" aria-hidden="true"></i> Tap to reveal answer</div>
+    </div>
+    <div class="flip-face flip-back">
+      <div style="display:flex;justify-content:space-between">
+        <span class="${bcls(card[0])}">${card[0]} — ${card[1]}</span>
+      </div>
+      <div class="fback-body">${card[3]}</div>
+    </div>
+  </div>
+</div>
+<div class="nav-row">
+  <button class="btn" id="prev-card"><i class="ti ti-arrow-left" aria-hidden="true"></i> Prev</button>
+  <button class="btn" id="shuf-card"><i class="ti ti-arrows-shuffle" aria-hidden="true"></i> Shuffle</button>
+  <button class="btn" id="next-card">Next <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+</div>
+<p style="text-align:center;font-size:11px;color:var(--color-text-secondary);margin-top:10px">${cards.length} cards in current set</p>`;
+}
+
+function renderQuiz(){
+  if(!S.qs){
+    const qcount=filteredQ().length;
+    return `<h2 class="sh">Practice quiz</h2>
+<p style="color:var(--color-text-secondary);margin-bottom:20px;line-height:1.7">Randomized multiple-choice questions with instant explanations. Great for active recall practice.</p>
+<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:24px;margin-bottom:20px">
+  <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;font-weight:500">Select certification</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+    ${[['ALL','All certs','#1D9E75'],['NASM','NASM','#185FA5'],['ACE','ACE','#BA7517'],['ISSA','ISSA','#534AB7']].map(([c,l,col])=>`<button class="btn ${S.qc===c?'primary':''}" data-qcert="${c}" style="${S.qc===c?'background:'+col+';border-color:'+col:''}">${l}</button>`).join('')}
+  </div>
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:16px">${qcount} questions available — quiz will select up to 15 at random</div>
+  <button class="btn primary" id="start-quiz" style="width:100%;justify-content:center;padding:12px">Start quiz <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+</div>`;
+  }
+  if(S.qd){
+    const pct=Math.round(S.qsc/S.qq.length*100);
+    const msg=pct>=80?'Excellent work!':pct>=60?'Good effort!':'Keep studying!';
+    return `<h2 class="sh">Quiz results</h2>
+<div style="text-align:center;margin-bottom:24px">
+  <div style="font-family:'Oswald',sans-serif;font-size:56px;font-weight:500;color:${pct>=80?'#1D9E75':pct>=60?'#BA7517':'#E24B4A'};line-height:1">${S.qsc}/${S.qq.length}</div>
+  <div style="font-size:16px;font-weight:500;margin:6px 0 4px">${msg}</div>
+  <div style="font-size:13px;color:var(--color-text-secondary)">${pct}% correct</div>
+</div>
+<div class="card" style="margin-bottom:20px">
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:12px;letter-spacing:.3px">QUESTION REVIEW</div>
+  ${S.qa.map((a)=>`<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;font-size:13px">
+    <span style="color:${a.ok?'#1D9E75':'#E24B4A'};font-weight:500;flex-shrink:0">${a.ok?'✓':'✗'}</span>
+    <span style="color:var(--color-text-secondary);line-height:1.5">${a.q}</span>
+  </div>`).join('')}
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+  <button class="btn primary" id="retry-quiz">Retry quiz</button>
+  <button class="btn" id="change-cert-quiz">Change cert</button>
+</div>`;
+  }
+  const q=S.qq[S.qi];
+  const pct=Math.round(S.qi/S.qq.length*100);
+  return `<div style="display:flex;justify-content:space-between;margin-bottom:8px">
+  <h2 class="sh" style="margin:0">Question ${S.qi+1} of ${S.qq.length}</h2>
+  <span style="font-size:12px;color:var(--color-text-secondary)">Score: ${S.qsc}</span>
+</div>
+<div class="prog"><div class="progf" style="width:${pct}%"></div></div>
+<span class="${bcls(q[0])}" style="margin-bottom:12px;display:inline-block">${q[0]}</span>
+<div class="card" style="margin-bottom:16px">
+  <p style="font-size:15px;line-height:1.7;margin:0;font-weight:500">${q[1]}</p>
+</div>
+${q[2].map((opt,i)=>{
+  let cls='opt';
+  if(S.qsel!==null){if(i===q[3])cls+=' ok';else if(i===S.qsel&&S.qsel!==q[3])cls+=' no';}
+  return `<button class="${cls}" data-opt="${i}" ${S.qsel!==null?'disabled':''}>
+    <span style="font-weight:500;color:var(--color-text-secondary);flex-shrink:0;min-width:18px">${String.fromCharCode(65+i)}.</span>
+    <span>${opt}</span>
+  </button>`;
+}).join('')}
+${S.qsel!==null?`<div class="expbox ${S.qsel===q[3]?'ok':'no'}">
+  <strong style="display:block;margin-bottom:4px;font-weight:500">${S.qsel===q[3]?'Correct!':'Incorrect'}</strong>
+  ${q[4]}
+</div>
+<div style="text-align:center">
+  <button class="btn primary" id="next-q">${S.qi>=S.qq.length-1?'See results':'Next question <i class="ti ti-arrow-right" aria-hidden="true"></i>'}</button>
+</div>`:''}`;
+}
+
+function render(){
+  document.getElementById('home').innerHTML=renderHome();
+  document.getElementById('topics').innerHTML=renderTopics();
+  document.getElementById('cards').innerHTML=renderCards();
+  document.getElementById('quiz').innerHTML=renderQuiz();
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const active=document.getElementById(S.tab);
+  if(active)active.classList.add('active');
+  document.querySelectorAll('.tb').forEach(b=>b.classList.toggle('active',b.dataset.tab===S.tab));
+  document.querySelectorAll('.cp').forEach(b=>b.classList.toggle('on',b.dataset.c===S.cert));
+  bindEvents();
+}
+
+function bindEvents(){
+  document.querySelectorAll('.tb').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;render()});
+  document.querySelectorAll('.cp').forEach(b=>b.onclick=()=>{S.cert=b.dataset.c;S.ci=0;S.flipped=false;render()});
+  document.querySelectorAll('.ctab').forEach(b=>b.onclick=()=>{S.tcert=b.dataset.tcert;render()});
+  document.querySelectorAll('[data-goto-cert]').forEach(b=>b.onclick=()=>{S.cert=b.dataset.gotoCert;S.tab='cards';S.ci=0;S.flipped=false;render()});
+  document.querySelectorAll('[data-goto-topic]').forEach(b=>b.onclick=()=>{const c=b.dataset.gotoTopic;S.tcert=c==='ALL'?'common':c.toLowerCase();S.tab='topics';render()});
+  const fc=document.getElementById('fc');
+  if(fc)fc.onclick=()=>{S.flipped=!S.flipped;const fi=fc.querySelector('.flip-inner');if(fi)fi.classList.toggle('flipped',S.flipped)};
+  const nc=document.getElementById('next-card');if(nc)nc.onclick=()=>{const cards=filteredCards();S.ci=(S.ci+1)%cards.length;S.flipped=false;render()};
+  const pc=document.getElementById('prev-card');if(pc)pc.onclick=()=>{const cards=filteredCards();S.ci=(S.ci-1+cards.length)%cards.length;S.flipped=false;render()};
+  const sc=document.getElementById('shuf-card');if(sc)sc.onclick=()=>{const cards=filteredCards();S.ci=Math.floor(Math.random()*cards.length);S.flipped=false;render()};
+  document.querySelectorAll('[data-qcert]').forEach(b=>b.onclick=()=>{S.qc=b.dataset.qcert;render()});
+  const sq=document.getElementById('start-quiz');
+  if(sq)sq.onclick=()=>{const pool=filteredQ();S.qq=shuffle(pool).slice(0,Math.min(15,pool.length));S.qi=0;S.qsel=null;S.qsc=0;S.qa=[];S.qd=false;S.qs=true;render()};
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(S.qsel!==null)return;
+    const i=parseInt(b.dataset.opt);
+    S.qsel=i;
+    if(i===S.qq[S.qi][3])S.qsc++;
+    S.qa.push({ok:i===S.qq[S.qi][3],q:S.qq[S.qi][1]});
+    render();
+  });
+  const nq=document.getElementById('next-q');
+  if(nq)nq.onclick=()=>{if(S.qi>=S.qq.length-1){S.qd=true;}else{S.qi++;S.qsel=null;}render()};
+  const rq=document.getElementById('retry-quiz');if(rq)rq.onclick=()=>{const pool=filteredQ();S.qq=shuffle(pool).slice(0,Math.min(15,pool.length));S.qi=0;S.qsel=null;S.qsc=0;S.qa=[];S.qd=false;render()};
+  const cq=document.getElementById('change-cert-quiz');if(cq)cq.onclick=()=>{S.qs=false;S.qd=false;render()};
+}
+render();
+</script>
+</body>
+</html>
